@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
 
 @Component
 public class JwtProvider {
+    private static final String HMAC_ALGORITHM = "HmacSHA256";
 
     private final SecretKey secretKey;
     private final BaseUserDetailsService baseUserDetailsService;
@@ -33,7 +34,7 @@ public class JwtProvider {
 
     public JwtProvider(@Value("${spring.jwt.secret}") String secret,
                        BaseUserDetailsService baseUserDetailsService, RedisService redisService) {
-        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), HMAC_ALGORITHM);
         this.baseUserDetailsService = baseUserDetailsService;
         this.redisService = redisService;
     }
