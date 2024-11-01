@@ -41,12 +41,14 @@ public class LoginController {
         return ResponseEntity.ok().header(authHeader, token.accessToken()).body(token);
     }
 
+    @Operation(summary = "리프레시 토큰으로 액세스 토큰 재발급")
     @PostMapping("/renew")
     public ResponseEntity<TokenDTO> renewAccessToken(@RequestBody String refreshToken) {
         TokenDTO token = loginService.renewAccessToken(refreshToken);
         return ResponseEntity.ok().header(authHeader, token.accessToken()).body(token);
     }
 
+    @Operation(summary = "로그아웃")
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader("Authorization") String accessToken) {
         loginService.logout(accessToken);
