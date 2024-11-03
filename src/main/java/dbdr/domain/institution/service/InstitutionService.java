@@ -28,10 +28,10 @@ public class InstitutionService {
                 institution.getInstitutionName());
     }
 
-    public InstitutionResponse updateInstitution(Long id, InstitutionRequest institutionRequest) {
+    public InstitutionResponse updateInstitution(Long institutionId, InstitutionRequest institutionRequest) {
         ensureUniqueInstitutionNumber(institutionRequest.institutionNumber());
 
-        Institution institution = getInstitution(id);
+        Institution institution = getInstitution(institutionId);
         institution.updateInstitution(institutionRequest.institutionNumber(), institutionRequest.institutionName());
         institutionRepository.save(institution);
         return new InstitutionResponse(institutionRequest.institutionNumber(),
@@ -54,8 +54,8 @@ public class InstitutionService {
                 institution.getInstitutionName());
     }
 
-    public void deleteInstitutionById(Long id) {
-        Institution institution = getInstitution(id);
+    public void deleteInstitutionById(Long institutionId) {
+        Institution institution = getInstitution(institutionId);
         institution.deactivate();
         institutionRepository.delete(institution);
     }
@@ -64,10 +64,5 @@ public class InstitutionService {
         if (institutionRepository.existsByInstitutionNumber(institutionNumber)) {
             throw new ApplicationException(ApplicationError.DUPLICATE_INSTITUTION_NUMBER);
         }
-    }
-
-    private Institution getInstitution(Long id) {
-        return institutionRepository.findById(id)
-                .orElseThrow(() -> new ApplicationException(ApplicationError.INSTITUTION_NOT_FOUND));
     }
 }
