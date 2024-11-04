@@ -69,8 +69,8 @@ public class ChartMapperTest {
                 "Flu",
                 recipientId,
                 new BodyManagementRequest(true, false, "Lunch", "Full", 3, true, false, true, "Good"),
-                new NursingManagementRequest(120, 80, "36.5", "All good"),
-                new CognitiveManagementRequest(true, "No issues"),
+                new NursingManagementRequest(120, 80, "36.5", true, true, true, "All good"),
+                new CognitiveManagementRequest(true, true, "No issues"),
                 new RecoveryTrainingRequest("Physical Therapy", true, "Completed")
         );
 
@@ -128,7 +128,8 @@ public class ChartMapperTest {
     void testToResponse_nursingManagementToNursingManagementResponse() {
         // given
         HealthBloodPressure healthBloodPressure = new HealthBloodPressure(120, 80);
-        NursingManagement nursingManagement = new NursingManagement(healthBloodPressure, "36.5", "All good");
+        NursingManagement nursingManagement = new NursingManagement(healthBloodPressure, "36.5", true, true, true,
+                "All good");
 
         // when
         NursingManagementResponse response = chartMapper.toResponse(nursingManagement);
@@ -142,7 +143,7 @@ public class ChartMapperTest {
     @Test
     void testToEntity_nursingManagementRequestToNursingManagement() {
         // given
-        NursingManagementRequest request = new NursingManagementRequest(120, 80, "36.5", "All good");
+        NursingManagementRequest request = new NursingManagementRequest(120, 80, "36.5", true, true, true, "All good");
 
         // when
         NursingManagement nursingManagement = chartMapper.toEntity(request);
