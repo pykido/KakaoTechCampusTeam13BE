@@ -18,6 +18,7 @@ import dbdr.domain.chart.entity.HealthBloodPressure;
 import dbdr.domain.chart.entity.NursingManagement;
 import dbdr.domain.chart.entity.PhysicalClear;
 import dbdr.domain.chart.entity.PhysicalMeal;
+import dbdr.domain.institution.entity.Institution;
 import dbdr.domain.recipient.entity.Recipient;
 import dbdr.domain.recipient.service.RecipientService;
 import java.time.LocalDate;
@@ -53,6 +54,10 @@ public class ChartMapperTest {
     void testToEntity_chartDetailRequestToChart() {
         // given
         Long recipientId = 1L;
+        Institution institution = Institution.builder()
+                .institutionName("HealthCare Institution")
+                .institutionNumber(100L)
+                .build();
         Recipient recipient = Recipient.builder()
                 .name("John Doe")
                 .birth(LocalDate.of(1950, 1, 1))
@@ -60,7 +65,7 @@ public class ChartMapperTest {
                 .careLevel("Level 1")
                 .careNumber("12345678")
                 .startDate(LocalDate.of(2020, 1, 1))
-                .institution("HealthCare Institution")
+                .institution(institution)
                 .institutionNumber(100L)
                 .build();
 
