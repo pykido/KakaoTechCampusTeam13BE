@@ -68,7 +68,7 @@ public class ChartMapperTest {
         ChartDetailRequest request = new ChartDetailRequest(
                 "Flu",
                 recipientId,
-                new BodyManagementRequest(true, false, "Lunch", "Full", 3, true, false, "Good"),
+                new BodyManagementRequest(true, false, "Lunch", "Full", 3, true, false, true, "Good"),
                 new NursingManagementRequest(120, 80, "36.5", "All good"),
                 new CognitiveManagementRequest(true, "No issues"),
                 new RecoveryTrainingRequest("Physical Therapy", true, "Completed")
@@ -110,7 +110,7 @@ public class ChartMapperTest {
     void testToEntity_bodyManagementRequestToBodyManagement() {
         // given
         BodyManagementRequest request = new BodyManagementRequest(
-                true, false, "Lunch", "Full", 3, true, false, "Good"
+                true, false, "Lunch", "Full", 3, true, false, false, "Good"
         );
 
         // when
