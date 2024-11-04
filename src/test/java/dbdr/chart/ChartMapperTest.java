@@ -18,7 +18,6 @@ import dbdr.domain.chart.entity.HealthBloodPressure;
 import dbdr.domain.chart.entity.NursingManagement;
 import dbdr.domain.chart.entity.PhysicalClear;
 import dbdr.domain.chart.entity.PhysicalMeal;
-import dbdr.domain.chart.entity.PhysicalWalk;
 import dbdr.domain.recipient.entity.Recipient;
 import dbdr.domain.recipient.service.RecipientService;
 import java.time.LocalDate;
@@ -93,8 +92,8 @@ public class ChartMapperTest {
         // given
         PhysicalClear physicalClear = new PhysicalClear(true, false);
         PhysicalMeal physicalMeal = new PhysicalMeal("Lunch", "Full");
-        PhysicalWalk physicalWalk = new PhysicalWalk(true, false);
-        BodyManagement bodyManagement = new BodyManagement(physicalMeal, physicalWalk, physicalClear, 3, "Good");
+
+        BodyManagement bodyManagement = new BodyManagement(physicalMeal, physicalClear, 3, "Good", true, true, true);
 
         // when
         BodyManagementResponse response = chartMapper.toResponse(bodyManagement);
