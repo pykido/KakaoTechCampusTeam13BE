@@ -71,7 +71,7 @@ public class ChartMapperTest {
                 new BodyManagementRequest(true, false, "Lunch", "Full", 3, true, false, true, "Good"),
                 new NursingManagementRequest(120, 80, "36.5", true, true, true, "All good"),
                 new CognitiveManagementRequest(true, true, "No issues"),
-                new RecoveryTrainingRequest("Physical Therapy", true, "Completed")
+                new RecoveryTrainingRequest("Physical Therapy", true, true, true, "Completed")
         );
 
         // when
