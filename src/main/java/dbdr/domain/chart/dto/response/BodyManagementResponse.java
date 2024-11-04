@@ -8,7 +8,8 @@ public record BodyManagementResponse(
         String intakeAmount, // 섭취량
         int physicalRestroom, // 화장실 횟수
         boolean has_walked, // 산책
-        boolean has_companion, // 외출 동행
+        boolean isPositionChangeRequired, // 체위 변경 유무
+        boolean isMobilityAssistance, // 이동 도움 유무
         String physicalNote // 특이사항 입력
 ) {
 }
