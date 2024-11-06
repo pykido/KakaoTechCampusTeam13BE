@@ -9,9 +9,9 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "Master" ]
+    branches: [ "featcicd" ]
   pull_request:
-    branches: [ "Master" ]
+    branches: [ "featcicd" ]
 
 jobs:
   build:
