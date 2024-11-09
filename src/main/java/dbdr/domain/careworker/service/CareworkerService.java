@@ -80,6 +80,8 @@ public class CareworkerService {
 
     @Transactional
     public CareworkerResponse updateCareworker(Long careworkerId, CareworkerRequest request) {
+        ensureUniquePhoneButNotId(request.getPhone(), careworkerId);
+        ensureUniqueEmailButNotId(request.getEmail(), careworkerId);
         Careworker careworker = findCareworkerById(careworkerId);
 
         /*if (!careworker.getInstitution().equals(institution)) {
@@ -92,6 +94,8 @@ public class CareworkerService {
 
     @Transactional
     public CareworkerResponse updateCareworkerByAdmin(Long careworkerId, CareworkerRequest request) {
+        ensureUniquePhoneButNotId(request.getPhone(), careworkerId);
+        ensureUniqueEmailButNotId(request.getEmail(), careworkerId);
         Careworker careworker = findCareworkerById(careworkerId);
 
 
@@ -165,6 +169,18 @@ public class CareworkerService {
         return new CareworkerResponseDTO(careworker.getId(), careworker.getInstitution().getId(),
                 careworker.getName(), careworker.getEmail(), careworker.getPhone());
     }*/
+
+    private void ensureUniquePhoneButNotId(String phone, Long id) {
+        if(careworkerRepository.existsByPhoneAndIdNot(phone, id)) {
+            throw new ApplicationException(ApplicationError.DUPLICATE_PHONE);
+        }
+    }
+
+    private void ensureUniqueEmailButNotId(String phone, Long id) {
+        if(careworkerRepository.existsByEmailAndIdNot(phone, id)) {
+            throw new ApplicationException(ApplicationError.DUPLICATE_EMAIL);
+        }
+    }
 
     public Careworker findByLineUserId(String userId) {
         return careworkerRepository.findByLineUserId(userId).orElse(null);
