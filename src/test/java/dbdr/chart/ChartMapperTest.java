@@ -138,6 +138,7 @@ public class ChartMapperTest {
         BodyManagement bodyManagement = chartMapper.toEntity(request);
         assertThat(bodyManagement).isNotNull();
         assertThat(bodyManagement.getPhysicalClear().isWash()).isEqualTo(request.wash());
+        assertThat(bodyManagement.isHasWalked()).isEqualTo(request.hasWalked());
         assertThat(bodyManagement.getPhysicalClear().isBath()).isEqualTo(request.bath());
         assertThat(bodyManagement.getPhysicalMeal().getMealType()).isEqualTo(request.mealType());
         assertThat(bodyManagement.getPhysicalMeal().getIntakeAmount()).isEqualTo(request.intakeAmount());
