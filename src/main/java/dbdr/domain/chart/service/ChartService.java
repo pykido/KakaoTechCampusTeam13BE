@@ -5,9 +5,9 @@ import dbdr.domain.chart.dto.request.ChartDetailRequest;
 import dbdr.domain.chart.dto.response.ChartDetailResponse;
 import dbdr.domain.chart.entity.Chart;
 import dbdr.domain.chart.repository.ChartRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,9 +17,11 @@ public class ChartService {
     private final ChartRepository chartRepository;
     private final ChartMapper chartMapper;
 
-    public Page<ChartDetailResponse> getAllChartByRecipientId(Long recipientId, Pageable pageable) {
-        Page<Chart> results = chartRepository.findAllByRecipientId(recipientId, pageable);
-        return results.map(chartMapper::toResponse);
+    public List<ChartDetailResponse> getAllChartByRecipientId(Long recipientId) {
+        List<Chart> results = chartRepository.findAllByRecipientId(recipientId);
+        return results.stream()
+                .map(chartMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
     public ChartDetailResponse getChartById(Long chartId) {

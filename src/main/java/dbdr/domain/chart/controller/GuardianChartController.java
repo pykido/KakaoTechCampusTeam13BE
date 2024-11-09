@@ -7,8 +7,8 @@ import dbdr.domain.chart.service.ChartService;
 import dbdr.global.util.api.ApiUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -29,11 +29,11 @@ public class GuardianChartController {
 
     @Operation(summary = "돌봄대상자 아이디로 차트 정보 조회")
     @GetMapping("/recipient")
-    public ResponseEntity<ApiUtils.ApiResult<Page<ChartDetailResponse>>> getAllChartByRecipientId(
+    public ResponseEntity<ApiUtils.ApiResult<List<ChartDetailResponse>>> getAllChartByRecipientId(
             @RequestParam(value = "recipient-id", required = false) Long recipientId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         // 환자 정보 접근 권한 확인 로직 필요 -> 보호자가 자신의 환자 정보만 조회 가능
-        Page<ChartDetailResponse> recipients = chartService.getAllChartByRecipientId(recipientId, pageable);
+        List<ChartDetailResponse> recipients = chartService.getAllChartByRecipientId(recipientId);
         return ResponseEntity.ok(ApiUtils.success(recipients));
     }
 
