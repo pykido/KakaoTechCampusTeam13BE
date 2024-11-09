@@ -57,11 +57,14 @@ public class SecurityConfig {
                 .authenticationProvider(baseAuthenticationProvider())
                 .authorizeHttpRequests((authorize) -> {
                     authorize
+                            .requestMatchers(HttpMethod.GET,
+                                    "swagger-ui/index.html")
+                            .permitAll()
                             .requestMatchers(HttpMethod.POST,
                                     "/*/auth/login/*",
                                     "/*/auth/renew")
-                            .permitAll()
-                            .anyRequest().authenticated();
+                            .permitAll();
+                    //.anyRequest().authenticated();
                 })
                 .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling((exception) -> exception
