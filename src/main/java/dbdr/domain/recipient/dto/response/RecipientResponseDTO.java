@@ -1,7 +1,5 @@
 package dbdr.domain.recipient.dto.response;
 
-import dbdr.domain.careworker.entity.Careworker;
-import dbdr.domain.institution.entity.Institution;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +10,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecipientResponseDTO {
-
     private Long id;
     private String name;
     private LocalDate birth;
@@ -24,4 +21,5 @@ public class RecipientResponseDTO {
     private Long institutionNumber;
     private Long institutionId;
     private Long careworkerId;
+    private Long guardianId;
 }

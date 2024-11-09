@@ -2,7 +2,7 @@ package dbdr.security.service;
 
 import dbdr.global.exception.ApplicationError;
 import dbdr.global.exception.ApplicationException;
-import dbdr.security.dto.BaseUserDetails;
+import dbdr.security.model.BaseUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -22,15 +22,19 @@ public class BaseAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
+
         BaseUserDetails unAuthUser = (BaseUserDetails) authentication.getPrincipal();
         BaseUserDetails authUser = baseUserDetailsService.loadUserByUsernameAndRole(unAuthUser.getUserLoginId(), unAuthUser.getRole());
 
-        log.debug("unAuthUser : 검사시작 {}", unAuthUser.getUserLoginId());
+        log.info("unAuthUser : 검사시작 {}", unAuthUser.getUserLoginId());
         //비밀번호 일치 확인
         if (!passwordEncoder.matches(unAuthUser.getPassword(), authUser.getPassword())) {
+            log.info("접근한 사용자 패스워드 : {}", unAuthUser.getPassword());
+            log.info("저장된 패스워드 : {}", authUser.getPassword());
+            log.info("비밀번호가 불일치합니다. : {}",passwordEncoder.matches(unAuthUser.getPassword(), authUser.getPassword()));
             throw new ApplicationException(ApplicationError.PASSWORD_NOT_MATCH);
         }
-
+        log.debug("비밀번호 일치");
         return new UsernamePasswordAuthenticationToken(authUser, authUser.getPassword(), authUser.getAuthorities());
     }
 

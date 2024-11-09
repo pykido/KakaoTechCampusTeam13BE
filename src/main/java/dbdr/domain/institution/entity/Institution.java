@@ -21,6 +21,7 @@ public class Institution extends BaseEntity {
     @Column(unique = true)
     private String loginId;
 
+    @Column(nullable = false)
     private String loginPassword;
 
     @Column(nullable = false, unique = true)
@@ -38,5 +39,9 @@ public class Institution extends BaseEntity {
     public void updateInstitution(Long institutionNumber, String institutionName) {
         this.institutionNumber = institutionNumber;
         this.institutionName = institutionName;
+    }
+
+    public void updatePassword(String encodedPassword) {
+        this.loginPassword = encodedPassword;
     }
 }

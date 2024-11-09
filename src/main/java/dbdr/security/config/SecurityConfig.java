@@ -1,8 +1,8 @@
 package dbdr.security.config;
 
+import dbdr.security.model.JwtProvider;
 import dbdr.security.service.BaseAuthenticationProvider;
 import dbdr.security.service.BaseUserDetailsService;
-import dbdr.security.service.JwtProvider;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,14 +57,21 @@ public class SecurityConfig {
                 .authenticationProvider(baseAuthenticationProvider())
                 .authorizeHttpRequests((authorize) -> {
                     authorize
-                            .requestMatchers(HttpMethod.GET,
-                                    "swagger-ui/index.html")
-                            .permitAll()
+                        .requestMatchers("/v1/admin/**")
+                        .permitAll()
+                        .requestMatchers(
+                            "/swagger-ui/**",
+                            "/v3/api-docs/**",
+                            "/swagger-resources/**",
+                            "/webjars/**",
+                            "/favicon.ico",
+                            "/api-docs/**")
+                        .permitAll()
                             .requestMatchers(HttpMethod.POST,
                                     "/*/auth/login/*",
                                     "/*/auth/renew")
-                            .permitAll();
-                    //.anyRequest().authenticated();
+                            .permitAll()
+                            .anyRequest().authenticated();
                 })
                 .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling((exception) -> exception

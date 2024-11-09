@@ -1,5 +1,7 @@
 package dbdr.domain.guardian.service;
 
+import dbdr.domain.guardian.dto.request.GuardianAlertTimeRequest;
+import dbdr.domain.guardian.dto.response.GuardianMyPageResponse;
 import dbdr.domain.guardian.entity.Guardian;
 import dbdr.domain.guardian.dto.request.GuardianRequest;
 import dbdr.domain.guardian.dto.response.GuardianResponse;
@@ -20,6 +22,22 @@ public class GuardianService {
     public GuardianResponse getGuardianById(Long guardianId) {
         Guardian guardian = findGuardianById(guardianId);
         return new GuardianResponse(guardian.getPhone(), guardian.getName(), guardian.isActive());
+    }
+
+    public GuardianMyPageResponse getMyPageGuardianInfo(Long guardianId) {
+        Guardian guardian = findGuardianById(guardianId);
+        return new GuardianMyPageResponse(guardian.getName(), guardian.getPhone(),
+            guardian.getLoginId(), guardian.getAlertTime());
+    }
+
+    public GuardianMyPageResponse updateAlertTime(Long guardianId,
+        GuardianAlertTimeRequest request) {
+        ensureUniquePhone(request.phone());
+        Guardian guardian = findGuardianById(guardianId);
+        guardian.updateAlertTime(request.name(), request.phone(), request.alertTime());
+        guardianRepository.save(guardian);
+        return new GuardianMyPageResponse(guardian.getName(), guardian.getPhone(),
+            guardian.getLoginId(), guardian.getAlertTime());
     }
 
     public GuardianResponse updateGuardianById(Long guardianId,
@@ -43,9 +61,19 @@ public class GuardianService {
 
     public GuardianResponse addGuardian(GuardianRequest guardianRequest) {
         ensureUniquePhone(guardianRequest.phone());
-        Guardian guardian = new Guardian(guardianRequest.phone(), guardianRequest.name());
+        /*
+        Guardian guardian = Guardian.builder().phone(guardianRequest.phone())
+            .name(guardianRequest.name())
+            .loginId(guardianRequest.phone())
+            .loginPassword(guardianRequest.loginPassword())
+            .recipient(null)
+            .build();
         guardian = guardianRepository.save(guardian);
         return new GuardianResponse(guardian.getPhone(), guardian.getName(), guardian.isActive());
+
+         */
+        return null;
+        //TODO
     }
 
     public void deleteGuardianById(Long guardianId) {

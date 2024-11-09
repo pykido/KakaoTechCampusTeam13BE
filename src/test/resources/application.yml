@@ -25,4 +25,4 @@ openai:
   api-key: "aaaaaa"
   model: "aa"
   chat-completions: "aaa"
-  model-tag: "aaaaa"
+  model-tag: "aaa"
