@@ -27,6 +27,9 @@ public enum ApplicationError {
     // Institution (요양원)
     INSTITUTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 요양원을 찾을 수가 없습니다."),
 
+    // Chart (차트)
+    CHART_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 차트를 찾을 수가 없습니다."),
+
     // 공통
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 존재하는 이메일입니다."),
     DUPLICATE_PHONE(HttpStatus.CONFLICT, "이미 존재하는 전화번호입니다."),

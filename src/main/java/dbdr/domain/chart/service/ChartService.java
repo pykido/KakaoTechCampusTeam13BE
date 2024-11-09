@@ -6,6 +6,8 @@ import dbdr.domain.chart.dto.response.ChartDetailResponse;
 import dbdr.domain.chart.dto.response.ChartOverviewResponse;
 import dbdr.domain.chart.entity.Chart;
 import dbdr.domain.chart.repository.ChartRepository;
+import dbdr.global.exception.ApplicationError;
+import dbdr.global.exception.ApplicationException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,8 @@ public class ChartService {
     }
 
     public ChartDetailResponse getChartById(Long chartId) {
-        Chart chart = chartRepository.findById(chartId).orElseThrow(); // 에러 처리 필요
+        Chart chart = chartRepository.findById(chartId)
+                .orElseThrow(() -> new ApplicationException(ApplicationError.CHART_NOT_FOUND));
         return chartMapper.toResponse(chart);
     }
 
@@ -41,7 +44,8 @@ public class ChartService {
     }
 
     public ChartDetailResponse updateChart(Long chartId, ChartDetailRequest request) {
-        Chart chart = chartRepository.findById(chartId).orElseThrow(); // 에러 처리 필요
+        Chart chart = chartRepository.findById(chartId)
+                .orElseThrow(() -> new ApplicationException(ApplicationError.CHART_NOT_FOUND));
         chart.update(chartMapper.toEntity(request));
         Chart savedChart = chartRepository.save(chart);
         return chartMapper.toResponse(savedChart);
