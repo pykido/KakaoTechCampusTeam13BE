@@ -2,6 +2,7 @@ package dbdr.domain.chart.controller;
 
 import dbdr.domain.chart.dto.request.ChartDetailRequest;
 import dbdr.domain.chart.dto.response.ChartDetailResponse;
+import dbdr.domain.chart.dto.response.ChartOverviewResponse;
 import dbdr.domain.chart.service.ChartService;
 import dbdr.global.util.api.ApiUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,11 +34,11 @@ public class CareWorkerChartController {
     @Operation(summary = "돌봄대상자 아이디로 차트 정보 조회",
             security = @SecurityRequirement(name = "JWT"))
     @GetMapping("/recipient")
-    public ResponseEntity<ApiUtils.ApiResult<List<ChartDetailResponse>>> getAllChartByRecipientId(
+    public ResponseEntity<ApiUtils.ApiResult<List<ChartOverviewResponse>>> getAllChartByRecipientId(
             @Parameter(hidden = true)
             @RequestParam(value = "recipient-id", required = false) Long recipientId) {
         // 환자 정보 접근 권한 확인 로직 필요 -> 요양사가 맡은 환자 정보만 조회 가능
-        List<ChartDetailResponse> recipients = chartService.getAllChartByRecipientId(recipientId);
+        List<ChartOverviewResponse> recipients = chartService.getAllChartByRecipientId(recipientId);
         return ResponseEntity.ok(ApiUtils.success(recipients));
     }
 

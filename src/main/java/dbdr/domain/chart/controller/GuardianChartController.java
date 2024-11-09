@@ -3,6 +3,7 @@ package dbdr.domain.chart.controller;
 import static dbdr.global.util.api.Utils.DEFAULT_PAGE_SIZE;
 
 import dbdr.domain.chart.dto.response.ChartDetailResponse;
+import dbdr.domain.chart.dto.response.ChartOverviewResponse;
 import dbdr.domain.chart.service.ChartService;
 import dbdr.global.util.api.ApiUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,11 +30,11 @@ public class GuardianChartController {
 
     @Operation(summary = "돌봄대상자 아이디로 차트 정보 조회")
     @GetMapping("/recipient")
-    public ResponseEntity<ApiUtils.ApiResult<List<ChartDetailResponse>>> getAllChartByRecipientId(
+    public ResponseEntity<ApiUtils.ApiResult<List<ChartOverviewResponse>>> getAllChartByRecipientId(
             @RequestParam(value = "recipient-id", required = false) Long recipientId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         // 환자 정보 접근 권한 확인 로직 필요 -> 보호자가 자신의 환자 정보만 조회 가능
-        List<ChartDetailResponse> recipients = chartService.getAllChartByRecipientId(recipientId);
+        List<ChartOverviewResponse> recipients = chartService.getAllChartByRecipientId(recipientId);
         return ResponseEntity.ok(ApiUtils.success(recipients));
     }
 

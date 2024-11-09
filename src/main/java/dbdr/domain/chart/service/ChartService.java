@@ -3,6 +3,7 @@ package dbdr.domain.chart.service;
 import dbdr.domain.chart.dto.ChartMapper;
 import dbdr.domain.chart.dto.request.ChartDetailRequest;
 import dbdr.domain.chart.dto.response.ChartDetailResponse;
+import dbdr.domain.chart.dto.response.ChartOverviewResponse;
 import dbdr.domain.chart.entity.Chart;
 import dbdr.domain.chart.repository.ChartRepository;
 import java.util.List;
@@ -17,10 +18,10 @@ public class ChartService {
     private final ChartRepository chartRepository;
     private final ChartMapper chartMapper;
 
-    public List<ChartDetailResponse> getAllChartByRecipientId(Long recipientId) {
+    public List<ChartOverviewResponse> getAllChartByRecipientId(Long recipientId) {
         List<Chart> results = chartRepository.findAllByRecipientId(recipientId);
         return results.stream()
-                .map(chartMapper::toResponse)
+                .map(chartMapper::toOverviewResponse)
                 .collect(Collectors.toList());
     }
 
