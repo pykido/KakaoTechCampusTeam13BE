@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -64,7 +65,6 @@ public class CareworkerService {
         return careworkers.stream().map(careworkerMapper::toResponse).toList();
     }
 
-
     @Transactional
     public CareworkerResponse createCareworker(CareworkerRequest careworkerRequestDTO) {
         ensureUniqueEmail(careworkerRequestDTO.getEmail());
@@ -78,6 +78,8 @@ public class CareworkerService {
 
     @Transactional
     public CareworkerResponse updateCareworker(Long careworkerId, CareworkerRequest request) {
+        ensureUniquePhoneButNotId(request.getPhone(), careworkerId);
+        ensureUniqueEmailButNotId(request.getEmail(), careworkerId);
         Careworker careworker = findCareworkerById(careworkerId);
 
         /*if (!careworker.getInstitution().equals(institution)) {
@@ -90,6 +92,8 @@ public class CareworkerService {
 
     @Transactional
     public CareworkerResponse updateCareworkerByAdmin(Long careworkerId, CareworkerRequest request) {
+        ensureUniquePhoneButNotId(request.getPhone(), careworkerId);
+        ensureUniqueEmailButNotId(request.getEmail(), careworkerId);
         Careworker careworker = findCareworkerById(careworkerId);
 
         Institution institution = institutionService.getInstitutionById(request.getInstitutionId());
@@ -102,7 +106,6 @@ public class CareworkerService {
 
         return careworkerMapper.toResponse(careworker);
     }
-
 
     @Transactional
     public void deleteCareworker(Long careworkerId, Long institutionId) {
@@ -160,6 +163,18 @@ public class CareworkerService {
         return new CareworkerResponseDTO(careworker.getId(), careworker.getInstitution().getId(),
                 careworker.getName(), careworker.getEmail(), careworker.getPhone());
     }*/
+
+    private void ensureUniquePhoneButNotId(String phone, Long id) {
+        if(careworkerRepository.existsByPhoneAndIdNot(phone, id)) {
+            throw new ApplicationException(ApplicationError.DUPLICATE_PHONE);
+        }
+    }
+
+    private void ensureUniqueEmailButNotId(String phone, Long id) {
+        if(careworkerRepository.existsByEmailAndIdNot(phone, id)) {
+            throw new ApplicationException(ApplicationError.DUPLICATE_EMAIL);
+        }
+    }
 
     public Careworker findByLineUserId(String userId) {
         return careworkerRepository.findByLineUserId(userId).orElse(null);
