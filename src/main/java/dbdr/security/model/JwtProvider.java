@@ -35,7 +35,7 @@ public class JwtProvider {
     private final RedisService redisService;
 
     public JwtProvider(@Value("${spring.jwt.secret}") String secret,
-        BaseUserDetailsService baseUserDetailsService, RedisService redisService) {
+                       BaseUserDetailsService baseUserDetailsService, RedisService redisService) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), HMAC_ALGORITHM);
         this.baseUserDetailsService = baseUserDetailsService;
         this.redisService = redisService;
@@ -45,14 +45,18 @@ public class JwtProvider {
         log.info("request 토큰 추출 시작");
         String bearerToken = request.getHeader("Authorization");
         log.info("request 토큰 값 : {}", bearerToken);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_PREFIX)) {
-            log.info("제거 전 request 토큰 값 : {}", bearerToken);
-            bearerToken = bearerToken.substring(TOKEN_PREFIX.length());
-            log.info("request 토큰 값 : {}", bearerToken);
-            return bearerToken;
+        return removeTokenPrefix(bearerToken);
+    }
+
+    public String removeTokenPrefix(String token) {
+        if (StringUtils.hasText(token) && token.startsWith(TOKEN_PREFIX)) {
+            log.info("제거 전 request 토큰 값 : {}", token);
+            token = token.substring(TOKEN_PREFIX.length());
+            log.info("request 토큰 값 : {}", token);
+            return token;
+        } else {
+            return null;
         }
-        log.info("request 토큰 추출 실패");
-        return null;
     }
 
     public String getUserName(String token) {
@@ -69,27 +73,27 @@ public class JwtProvider {
 
     public TokenDTO createAllToken(String username, String role) {
         TokenDTO token = TokenDTO.builder()
-            .refreshToken(createToken(username, role, REFRESH_TOKEN_EXPIRATION_TIME))
-            .accessToken(createToken(username, role, ACCESS_TOKEN_EXPIRATION_TIME))
-            .build();
+                .refreshToken(createToken(username, role, REFRESH_TOKEN_EXPIRATION_TIME))
+                .accessToken(createToken(username, role, ACCESS_TOKEN_EXPIRATION_TIME))
+                .build();
         redisService.saveRefreshToken(role + username, token.refreshToken());
         return token;
     }
 
     private String createToken(String username, String role, Long expireTime) {
         return Jwts.builder().claim("username", username).claim("role", role)
-            .setIssuer(JwtUtils.ISSUER)
-            .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + expireTime * 1000))
-            .signWith(secretKey).compact();
+                .setIssuer(JwtUtils.ISSUER)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expireTime * 1000))
+                .signWith(secretKey).compact();
     }
 
     public Authentication getAuthentication(String token) {
         BaseUserDetails userDetails = baseUserDetailsService.loadUserByUsernameAndRole(getUserName(token),
-            Role.valueOf(getRole(token)));
+                Role.valueOf(getRole(token)));
         validateBlackListToken(token);
         return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
-            userDetails.getAuthorities());
+                userDetails.getAuthorities());
     }
 
     private void validateBlackListToken(String token) {
@@ -103,18 +107,19 @@ public class JwtProvider {
 
     public TokenDTO renewTokens(String refreshToken) {
         if (!isValidRedisRefreshToken(getRedisCode(refreshToken), refreshToken)) {
-            redisService.deleteRefreshToken(getRedisCode(refreshToken));
+
             log.info("renew 실패");
             throw new ApplicationException(REFRESH_TOKEN_EXPIRED);
         }
-
+        redisService.deleteRefreshToken(getRedisCode(refreshToken));
         return createAllToken(getUserName(refreshToken), getRole(refreshToken));
     }
 
     public void deleteRefreshToken(String accessToken) {
-        String redisCode = getRedisCode(accessToken);
+        String token = removeTokenPrefix(accessToken);
+        String redisCode = getRedisCode(token);
         redisService.deleteRefreshToken(redisCode);
-        redisService.saveBlackList(redisCode, accessToken);
+        redisService.saveBlackList(redisCode, token);
 
     }
 
@@ -131,7 +136,8 @@ public class JwtProvider {
     }
 
     private Claims getJwtsBody(String token) {
+        log.info("token : {}", token);
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token)
-            .getBody();
+                .getBody();
     }
 }
