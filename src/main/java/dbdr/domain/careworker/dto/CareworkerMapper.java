@@ -9,9 +9,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Mapper(componentModel = "spring")
 public abstract class CareworkerMapper {
+    @Autowired
+    PasswordEncoder passwordEncoder;
     @Autowired
     private InstitutionService institutionService;
 
@@ -20,7 +23,9 @@ public abstract class CareworkerMapper {
             @Mapping(target = "id", source = "id")})
     public abstract CareworkerResponse toResponse(Careworker careworker);
 
-    @Mapping(target = "institution", source = "institutionId")
+    @Mappings({
+            @Mapping(target = "loginPassword", expression = "java(passwordEncoder.encode(request.getLoginPassword()))"),
+            @Mapping(target = "institution", source = "institutionId")})
     public abstract Careworker toEntity(CareworkerRequest request);
 
     protected Institution mapInstitution(Long institutionId) {
