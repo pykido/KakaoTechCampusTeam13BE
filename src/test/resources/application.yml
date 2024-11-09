@@ -1,21 +1,21 @@
 spring:
   config:
-    import:
-      - optional:database.yml
-      - optional:logging.yml
-
+    test:
+      institution:
+        loginId: "testInstitution"
+        loginPassword: "passwordInstitution"
+        institutionNumber: "123"
+        institutionName: "돌다리요양원"
   jwt:
-    secret: c3VwZXItc2VjdXJlLWxvbmdlci1zZWNyZXQta2V5LXVzaW5nLXN0cm9uZy1wYXNzd29yZC1tYW5hZ2VtZW50LXZpYS1iYXNlNjQtZW5jb2RpbmctdG8tcHJvdGVjdC1qd3Rz
-    expiration: 86400000
-    authheader: Authorization
-
+    secret: test
+    authheader: header
   app:
     version: v1
 
   data:
     redis:
-      host: localhost
-      port: 6379
+      port: 1000
+      host: "host"
 
 line:
   bot:

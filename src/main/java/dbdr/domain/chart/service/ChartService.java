@@ -5,8 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dbdr.domain.chart.dto.ChartMapper;
 import dbdr.domain.chart.dto.request.ChartDetailRequest;
 import dbdr.domain.chart.dto.response.ChartDetailResponse;
+import dbdr.domain.chart.dto.response.ChartOverviewResponse;
 import dbdr.domain.chart.entity.Chart;
 import dbdr.domain.chart.repository.ChartRepository;
+import dbdr.global.exception.ApplicationError;
+import dbdr.global.exception.ApplicationException;
+import java.util.List;
+import java.util.stream.Collectors;
 import dbdr.global.configuration.OpenAiSummarizationConfig;
 import dbdr.global.exception.ApplicationError;
 import dbdr.global.exception.ApplicationException;
@@ -55,13 +60,16 @@ public class ChartService {
     @Value("${openai.model-tag}")
     private String modelTwo;
 
-    public Page<ChartDetailResponse> getAllChartByRecipientId(Long recipientId, Pageable pageable) {
-        Page<Chart> results = chartRepository.findAllByRecipientId(recipientId, pageable);
-        return results.map(chartMapper::toResponse);
+    public List<ChartOverviewResponse> getAllChartByRecipientId(Long recipientId) {
+        List<Chart> results = chartRepository.findAllByRecipientId(recipientId);
+        return results.stream()
+                .map(chartMapper::toOverviewResponse)
+                .collect(Collectors.toList());
     }
 
     public ChartDetailResponse getChartById(Long chartId) {
-        Chart chart = chartRepository.findById(chartId).orElseThrow(); // 에러 처리 필요
+        Chart chart = chartRepository.findById(chartId)
+                .orElseThrow(() -> new ApplicationException(ApplicationError.CHART_NOT_FOUND));
         return chartMapper.toResponse(chart);
     }
 
@@ -83,7 +91,8 @@ public class ChartService {
     }
 
     public ChartDetailResponse updateChart(Long chartId, ChartDetailRequest request) {
-        Chart chart = chartRepository.findById(chartId).orElseThrow(); // 에러 처리 필요
+        Chart chart = chartRepository.findById(chartId)
+                .orElseThrow(() -> new ApplicationException(ApplicationError.CHART_NOT_FOUND));
         chart.update(chartMapper.toEntity(request));
         Chart savedChart = chartRepository.save(chart);
         Summary summary = summaryRepository.findByChartId(chartId);
