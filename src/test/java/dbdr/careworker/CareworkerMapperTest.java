@@ -1,24 +1,21 @@
 package dbdr.careworker;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+
 import dbdr.domain.careworker.dto.CareworkerMapper;
 import dbdr.domain.careworker.dto.request.CareworkerRequest;
 import dbdr.domain.careworker.dto.response.CareworkerResponse;
 import dbdr.domain.careworker.entity.Careworker;
 import dbdr.domain.institution.entity.Institution;
 import dbdr.domain.institution.service.InstitutionService;
+import java.lang.reflect.Field;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.lang.reflect.Field;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class CareworkerMapperTest {
@@ -73,7 +70,9 @@ public class CareworkerMapperTest {
                 1L,
                 "John Doe",
                 "johndoe@example.com",
-                "01012345678"
+                "01012345678",
+                "johndoe",
+                "password"
         );
 
         // Mock InstitutionService response
