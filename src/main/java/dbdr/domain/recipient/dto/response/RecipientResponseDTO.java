@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecipientResponseDTO {
-
     private Long id;
     private String name;
     private LocalDate birth;
