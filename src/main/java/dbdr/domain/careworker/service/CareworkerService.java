@@ -1,16 +1,17 @@
 package dbdr.domain.careworker.service;
 
 import dbdr.domain.careworker.dto.CareworkerMapper;
+import dbdr.domain.careworker.dto.request.CareworkerRequest;
 import dbdr.domain.careworker.dto.request.CareworkerUpdateRequest;
 import dbdr.domain.careworker.dto.response.CareworkerMyPageResponse;
-import dbdr.domain.careworker.entity.Careworker;
-import dbdr.domain.careworker.dto.request.CareworkerRequest;
 import dbdr.domain.careworker.dto.response.CareworkerResponse;
+import dbdr.domain.careworker.entity.Careworker;
 import dbdr.domain.careworker.repository.CareworkerRepository;
 import dbdr.domain.institution.entity.Institution;
 import dbdr.domain.institution.service.InstitutionService;
 import dbdr.global.exception.ApplicationError;
 import dbdr.global.exception.ApplicationException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -114,7 +115,6 @@ public class CareworkerService {
             throw new ApplicationException(ApplicationError.ACCESS_NOT_ALLOWED);
         }
 
-
         careworkerRepository.delete(careworker);
     }
 
@@ -189,7 +189,6 @@ public class CareworkerService {
                 careworker.getName(),
                 careworker.getPhone(),
                 careworker.getInstitution().getInstitutionName(),
-                careworker.getLoginId(),
                 careworker.getWorkingDays(),
                 careworker.getAlertTime()
         );

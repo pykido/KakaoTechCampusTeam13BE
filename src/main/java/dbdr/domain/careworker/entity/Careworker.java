@@ -67,7 +67,7 @@ public class Careworker extends BaseEntity {
 //    }
 
     @Builder
-    public Careworker(String phone, String name, Institution institution,
+    public Careworker(String loginPassword, String phone, String name, Institution institution,
                       String email) {
         this.loginPassword = loginPassword;
         this.phone = phone;

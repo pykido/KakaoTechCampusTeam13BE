@@ -71,7 +71,6 @@ public class CareworkerMapperTest {
                 "John Doe",
                 "johndoe@example.com",
                 "01012345678",
-                "johndoe",
                 "password"
         );
 
