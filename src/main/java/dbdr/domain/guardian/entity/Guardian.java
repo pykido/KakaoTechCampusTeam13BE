@@ -1,5 +1,10 @@
 package dbdr.domain.guardian.entity;
 
+import dbdr.domain.institution.entity.Institution;
+import dbdr.domain.recipient.entity.Recipient;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalTime;
 
 import org.hibernate.annotations.SQLDelete;
@@ -40,16 +45,27 @@ public class Guardian extends BaseEntity {
     @Column(nullable = true)
     private LocalTime alertTime;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "institution_id")
+    private Institution institution;
+
     @Builder
-    public Guardian(String phone, String name) {
+    public Guardian(String loginId, String loginPassword, String phone, String name, Institution institution) {
         this.phone = phone;
         this.name = name;
-        this.alertTime = LocalTime.of(9, 0); // 오전 9시로 초기화
+        this.institution = institution;
+        this.alertTime = LocalTime.of(18, 0); // 오후 6시로 초기화
     }
 
     public void updateGuardian(String phone, String name) {
         this.phone = phone;
         this.name = name;
+    }
+
+    public void updateAlertTime(String name, String phone, LocalTime alertTime) {
+        this.phone = phone;
+        this.name = name;
+        this.alertTime = alertTime;
     }
 
     public void updateLineUserId(String lineUserId) {
