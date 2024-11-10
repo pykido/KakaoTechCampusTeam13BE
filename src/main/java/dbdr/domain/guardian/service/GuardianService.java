@@ -1,5 +1,6 @@
 package dbdr.domain.guardian.service;
 
+import dbdr.domain.core.alarm.service.AlarmService;
 import dbdr.domain.guardian.dto.request.GuardianAlertTimeRequest;
 import dbdr.domain.guardian.dto.response.GuardianMyPageResponse;
 import dbdr.domain.guardian.entity.Guardian;
@@ -10,6 +11,7 @@ import dbdr.global.exception.ApplicationError;
 import dbdr.global.exception.ApplicationException;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class GuardianService {
 
     private final GuardianRepository guardianRepository;
+    private final AlarmService alarmService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -80,6 +83,7 @@ public class GuardianService {
             .loginPassword(password)
             .build();
         guardian = guardianRepository.save(guardian);
+        alarmService.createGuardianAlarm(guardian);
         return new GuardianResponse(guardian.getPhone(), guardian.getName(), guardian.isActive());
     }
 
@@ -116,4 +120,15 @@ public class GuardianService {
         return guardianRepository.findByPhone(phone)
             .orElse(null);
     }
+
+    @Transactional
+    public void updateLineUserId(String userId, String phoneNumber) {
+        Guardian guardian = findByPhone(phoneNumber);
+        guardian.updateLineUserId(userId);
+        guardianRepository.save(guardian);
+    }
+
+	public List<Guardian> findByAlertTime(LocalTime currentTime) {
+        return guardianRepository.findByAlertTime(currentTime);
+	}
 }
