@@ -1,14 +1,18 @@
 package dbdr.openai.service;
 
-import dbdr.domain.chart.service.ChartService;
-import dbdr.openai.dto.response.OpenAiSummaryResponse;
-import dbdr.openai.dto.response.SummaryAndTagResponse;
+import dbdr.domain.chart.entity.Chart;
+import dbdr.domain.chart.repository.ChartRepository;
+import dbdr.global.exception.ApplicationError;
+import dbdr.global.exception.ApplicationException;
+import dbdr.openai.dto.response.SummaryApiFinalResponse;
 import dbdr.openai.dto.response.SummaryResponse;
 import dbdr.openai.dto.response.TagResponse;
 import dbdr.openai.entity.Summary;
 import dbdr.openai.repository.SummaryRepository;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,13 +20,16 @@ import org.springframework.stereotype.Service;
 public class SummaryService {
 
     private final SummaryRepository summaryRepository;
-    private final ChartService chartService;
+    private final ChartRepository chartRepository;
 
-    @Value("${openai.model-tag}")
-    private String modelTwo;
-
-    public SummaryAndTagResponse getSummaryAndTag(Long chartId) {
-        return new SummaryAndTagResponse(getSummarization(chartId), getTag(chartId));
+    public SummaryApiFinalResponse getFinalSummary(Long chartId) {
+        Chart chart = chartRepository.findById(chartId).orElseThrow(() -> new ApplicationException(
+            ApplicationError.CHART_NOT_FOUND));
+        String institutionName = chart.getRecipient().getInstitution().getInstitutionName();
+        LocalDateTime dateTime = chart.getUpdatedAt();
+        LocalDate date = dateTime.toLocalDate();
+        return new SummaryApiFinalResponse(getSummarization(chartId), getTag(chartId), date,
+            institutionName);
     }
 
     private SummaryResponse getSummarization(Long chartId) {
@@ -34,21 +41,6 @@ public class SummaryService {
 
     private TagResponse getTag(Long chartId) {
         Summary summary = summaryRepository.findByChartId(chartId);
-        String str = String.format(
-            "%s, %s, %s, %s, %s",
-            summary.getCognitiveManagement(), summary.getBodyManagement(),
-            summary.getRecoveryTraining(), summary.getConditionDisease(), summary.getNursingManagement()
-        );
-        OpenAiSummaryResponse response = chartService.openAiResponse(str, modelTwo);
-        return parseTagString(response.choices().get(0).message().content());
-    }
-
-    private TagResponse parseTagString(String tagString) {
-        String[] tags = tagString.split(", ");
-        String tag1 = tags[0].split(": ")[1].trim();
-        String tag2 = tags[1].split(": ")[1].trim();
-        String tag3 = tags[2].split(": ")[1].trim();
-
-        return new TagResponse(tag1, tag2, tag3);
+        return new TagResponse(summary.getTagOne(), summary.getTagTwo(), summary.getTagThree());
     }
 }

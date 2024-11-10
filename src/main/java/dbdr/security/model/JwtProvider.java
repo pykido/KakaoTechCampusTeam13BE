@@ -1,4 +1,4 @@
-package dbdr.security.service;
+package dbdr.security.model;
 
 import static dbdr.global.exception.ApplicationError.REFRESH_TOKEN_EXPIRED;
 import static dbdr.global.exception.ApplicationError.TOKEN_EXPIRED;
@@ -9,8 +9,8 @@ import static dbdr.global.util.api.JwtUtils.TOKEN_PREFIX;
 import dbdr.global.exception.ApplicationException;
 import dbdr.global.util.api.JwtUtils;
 import dbdr.security.dto.TokenDTO;
-import dbdr.security.model.BaseUserDetails;
-import dbdr.security.model.Role;
+import dbdr.security.service.BaseUserDetailsService;
+import dbdr.security.service.RedisService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 @Component
@@ -45,14 +44,19 @@ public class JwtProvider {
     public String extractToken(HttpServletRequest request) {
         log.info("request 토큰 추출 시작");
         String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_PREFIX)) {
-            log.info("제거 전 request 토큰 값 : {}", bearerToken);
-            bearerToken = bearerToken.substring(TOKEN_PREFIX.length());
-            log.info("request 토큰 값 : {}", bearerToken);
-            return bearerToken;
+        log.info("request 토큰 값 : {}", bearerToken);
+        return removeTokenPrefix(bearerToken);
+    }
+
+    public String removeTokenPrefix(String token) {
+        if (StringUtils.hasText(token) && token.startsWith(TOKEN_PREFIX)) {
+            log.info("제거 전 request 토큰 값 : {}", token);
+            token = token.substring(TOKEN_PREFIX.length());
+            log.info("request 토큰 값 : {}", token);
+            return token;
+        } else {
+            return null;
         }
-        log.info("request 토큰 추출 실패");
-        return null;
     }
 
     public String getUserName(String token) {
@@ -80,7 +84,7 @@ public class JwtProvider {
         return Jwts.builder().claim("username", username).claim("role", role)
                 .setIssuer(JwtUtils.ISSUER)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expireTime))
+                .setExpiration(new Date(System.currentTimeMillis() + expireTime * 1000))
                 .signWith(secretKey).compact();
     }
 
@@ -93,33 +97,30 @@ public class JwtProvider {
     }
 
     private void validateBlackListToken(String token) {
-        //TODO : test환경에서 redis 잠시 끄기
-        /*
-        if (redisService.isBlackList(getRedisCode(token), token)) {
+        if (!redisService.isBlackList(getRedisCode(token), token)) {
+            log.info("get redis code : {}", getRedisCode(token));
+            log.info("validate 실패");
             throw new ApplicationException(TOKEN_EXPIRED);
         }
 
-         */
     }
 
     public TokenDTO renewTokens(String refreshToken) {
-        /*
         if (!isValidRedisRefreshToken(getRedisCode(refreshToken), refreshToken)) {
-            redisService.deleteRefreshToken(getRedisCode(refreshToken));
+
+            log.info("renew 실패");
             throw new ApplicationException(REFRESH_TOKEN_EXPIRED);
         }
-
-         */
+        redisService.deleteRefreshToken(getRedisCode(refreshToken));
         return createAllToken(getUserName(refreshToken), getRole(refreshToken));
     }
 
     public void deleteRefreshToken(String accessToken) {
-        /*
-        String redisCode = getRedisCode(accessToken);
+        String token = removeTokenPrefix(accessToken);
+        String redisCode = getRedisCode(token);
         redisService.deleteRefreshToken(redisCode);
-        redisService.saveBlackList(redisCode, accessToken);
+        redisService.saveBlackList(redisCode, token);
 
-         */
     }
 
     private Boolean isValidRedisRefreshToken(String code, String refreshToken) {
@@ -135,6 +136,7 @@ public class JwtProvider {
     }
 
     private Claims getJwtsBody(String token) {
+        log.info("token : {}", token);
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token)
                 .getBody();
     }

@@ -1,17 +1,14 @@
 spring:
-    config:
-        import:
-        - optional:database.yml
-        - optional:logging.yml
-        - optional:application-secret.yml
+  jwt:
+    secret: testasdfasdfasefasdcasfasefawefqwefqwefasdfwefqwdfaseffasdfa
+    authheader: header
+  app:
+    version: v1
 
-    app:
-      version: v1
-
-    data:
-      redis:
-        port: 1000
-        host: "host"
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 line:
   bot:
