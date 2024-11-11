@@ -100,15 +100,15 @@ public class Careworker extends BaseEntity {
         this.alertTime = alertTime;
     }
 
-	public void updateInstitution(Institution institution) {
-		this.institution = institution;
-	}
+    public void updateInstitution(Institution institution) {
+      this.institution = institution;
+    }
 
     // 요일 설정 및 조회 메서드
     public void addWorkDay(DayOfWeek day) {
         this.workDays |= day.getValue();
     }
-
+  
     // 다음 근무일 찾기
     public DayOfWeek getNextWorkingDay(DayOfWeek currentDay) {
         for (int i = 1; i <= 7; i++) { // 최대 7일을 순환하여 다음 근무일 찾기

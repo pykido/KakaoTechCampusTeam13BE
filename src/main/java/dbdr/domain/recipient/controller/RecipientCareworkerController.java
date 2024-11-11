@@ -29,7 +29,7 @@ public class RecipientCareworkerController {
     @Operation(summary = "담당 돌봄대상자 전체 조회 ", security = @SecurityRequirement(name = "JWT"))
     @GetMapping
     public ResponseEntity<ApiUtils.ApiResult<List<RecipientResponse>>> getAllRecipients(
-        @Parameter(hidden = true) @LoginCareworker Careworker careworker) {
+            @Parameter(hidden = true) @LoginCareworker Careworker careworker) {
         List<RecipientResponse> recipients = recipientService.getRecipientsByCareworker(careworker.getId());
         return ResponseEntity.ok(ApiUtils.success(recipients));
     }
