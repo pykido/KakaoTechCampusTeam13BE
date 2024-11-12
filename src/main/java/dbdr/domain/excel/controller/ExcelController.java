@@ -44,7 +44,7 @@ public class ExcelController {
         }
     }
 
-    @Operation(summary = "요양관리사 엑셀 다운로드")
+    @Operation(summary = "요양보호사 엑셀 다운로드")
     @GetMapping("/careworker/download")
     public ResponseEntity<byte[]> downloadCareworkerTemplate() {
         byte[] data = excelDownloadService.generateCareworkerTemplate();
@@ -75,8 +75,8 @@ public class ExcelController {
                 .body(data);
     }
 
-    @DbdrAuth(targetRole = Role.INSTITUTION,authParam = AuthParam.LOGIN_INSTITUTION)
-    @Operation(summary = "요양관리사 엑셀 업로드")
+    @DbdrAuth(targetRole = Role.INSTITUTION, authParam = AuthParam.LOGIN_INSTITUTION)
+    @Operation(summary = "요양보호사 엑셀 업로드")
     @PostMapping("/careworker/upload")
     public ResponseEntity<CareworkerFileUploadResponse> uploadCareworkerData(
             @Parameter(hidden = true) @LoginInstitution Institution institution,
@@ -86,7 +86,7 @@ public class ExcelController {
         return ResponseEntity.ok(result);
     }
 
-    @DbdrAuth(targetRole = Role.INSTITUTION,authParam = AuthParam.LOGIN_INSTITUTION)
+    @DbdrAuth(targetRole = Role.INSTITUTION, authParam = AuthParam.LOGIN_INSTITUTION)
     @Operation(summary = "보호자 엑셀 업로드")
     @PostMapping("/guardian/upload")
     public ResponseEntity<GuardianFileUploadResponse> uploadGuardianData(
@@ -97,7 +97,7 @@ public class ExcelController {
         return ResponseEntity.ok(result);
     }
 
-    @DbdrAuth(targetRole = Role.INSTITUTION,authParam = AuthParam.LOGIN_INSTITUTION)
+    @DbdrAuth(targetRole = Role.INSTITUTION, authParam = AuthParam.LOGIN_INSTITUTION)
     @Operation(summary = "돌봄대상자 엑셀 업로드")
     @PostMapping("/recipient/upload")
     public ResponseEntity<RecipientFileUploadResponse> uploadRecipientData(
