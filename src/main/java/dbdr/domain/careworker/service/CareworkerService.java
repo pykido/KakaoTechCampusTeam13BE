@@ -142,6 +142,7 @@ public class CareworkerService {
 
         careworker.updateWorkingDays(request.getWorkingDays());
         careworker.updateAlertTime(request.getAlertTime());
+        alarmService.updateAlarmByLocalTime(request.getAlertTime(), careworker.getPhone());
 
         return toMyPageResponseDTO(careworker);
     }
@@ -189,6 +190,15 @@ public class CareworkerService {
         return careworkerRepository.findByPhone(phoneNumber).orElse(null);
     }
 
+    @Transactional
+    public void updateLineUserId(String userId, String phoneNumber) {
+        Careworker careworker = findByPhone(phoneNumber);
+        careworker.updateLineUserId(userId);
+        careworkerRepository.save(careworker);
+    }
+
+
+
     private CareworkerMyPageResponse toMyPageResponseDTO(Careworker careworker) {
         return new CareworkerMyPageResponse(
                 careworker.getName(),
@@ -198,13 +208,4 @@ public class CareworkerService {
                 careworker.getWorkingDays()
         );
     }
-
-    @Transactional
-    public void updateLineUserId(String userId, String phoneNumber) {
-        Careworker careworker = findByPhone(phoneNumber);
-        careworker.updateLineUserId(userId);
-        careworkerRepository.save(careworker);
-    }
-
-
 }
