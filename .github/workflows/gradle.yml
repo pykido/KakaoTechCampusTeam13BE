@@ -20,7 +20,7 @@ jobs:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USER: ${{ secrets.EC2_USER }}
         run: |
-          scp -i ec2-key.pem -o StrictHostKeyChecking=no -r ./ $EC2_USER@$EC2_HOST:/home/$EC2_USER/app
+          scp -i ec2-key.pem -o StrictHostKeyChecking=no -r ./* $EC2_USER@$EC2_HOST:/home/$EC2_USER/app
 
       - name: Mock Build and Deploy on EC2
         env:
@@ -28,7 +28,7 @@ jobs:
           EC2_USER: ${{ secrets.EC2_USER }}
         run: |
           ssh -i ec2-key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-            # 실제 실행 없이 빌드 및 Docker 실행을 모의
+            
             MOCK=true
 
             # 빌드 단계
@@ -65,5 +65,5 @@ jobs:
               docker run -d --name care-app-container -v /home/$EC2_USER/app/config/application-secret.yml:/app/config/application-secret.yml -p 8080:8080 care-app:latest
             fi
 
-            echo "모의 배포 완료!"
+            echo "배포 완료"
           EOF
