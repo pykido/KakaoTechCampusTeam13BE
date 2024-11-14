@@ -123,14 +123,20 @@ public class ChartService {
     }
 
     public OpenAiSummaryResponse openAiResponse(String str, String tempModel) {
-        HttpHeaders headers = summarizationConfig.httpHeaders();
-        Message userMessage = new Message("user", str);
-        List<Message> messageList = List.of(userMessage);
-        OpenAiSummaryRequest request = new OpenAiSummaryRequest(tempModel, messageList);
-        ResponseEntity<OpenAiSummaryResponse> response = summarizationConfig.restTemplate()
-            .exchange(chatUrl, HttpMethod.POST, new HttpEntity<>(request, headers),
-                OpenAiSummaryResponse.class);
-        return response.getBody();
+        int cnt = 0;
+        while(cnt<3) {
+            HttpHeaders headers = summarizationConfig.httpHeaders();
+            Message userMessage = new Message("user", str);
+            List<Message> messageList = List.of(userMessage);
+            OpenAiSummaryRequest request = new OpenAiSummaryRequest(tempModel, messageList);
+            ResponseEntity<OpenAiSummaryResponse> response = summarizationConfig.restTemplate()
+                .exchange(chatUrl, HttpMethod.POST, new HttpEntity<>(request, headers),
+                    OpenAiSummaryResponse.class);
+            if (response.getStatusCode().is2xxSuccessful()|| response.getBody() == null)
+                return response.getBody();
+            else cnt++;
+        }
+        throw new ApplicationException(ApplicationError.OPEN_AI_ERROR);
     }
 
     private SummaryResponse getTextAndGetSummary(Chart chart) {
