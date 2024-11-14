@@ -2,9 +2,9 @@ name: Java CI and Deploy to AWS EC2
 
 on:
   push:
-    branches: [ "featcicd" ]
+    branches: [ "Week10" ]
   pull_request:
-    branches: [ "featcicd" ]
+    branches: [ "Week10" ]
 
 jobs:
   build:
@@ -42,11 +42,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Create .pem file from secret
+      - name: Decode and save .pem file
         env:
-          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          EC2_SSH_KEY_BASE64: ${{ secrets.EC2_SSH_KEY_BASE64 }}
         run: |
-          echo "$EC2_SSH_KEY" > ec2-key.pem
+          echo "$EC2_SSH_KEY_BASE64" | base64 -d > ec2-key.pem
           chmod 600 ec2-key.pem
 
       - name: Upload JAR to EC2
@@ -62,7 +62,17 @@ jobs:
           EC2_USER: ${{ secrets.EC2_USER }}
         run: |
           ssh -i ec2-key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-            sudo systemctl stop your-app.service
-            sudo mv ~/app/your-app.jar /path/to/deployment/your-app.jar
-            sudo systemctl start your-app.service
+            # 현재 실행 중인 Java 프로세스 종료
+            echo "현재 실행 중인 Java 프로세스 종료 중..."
+            pkill -f 'java' || echo "종료할 Java 프로세스 없음"
+
+            # 새로운 애플리케이션 실행
+            JAR_FILE="dbdr-0.0.1-SNAPSHOT.jar"
+            echo "새로운 애플리케이션을 실행합니다: $JAR_FILE"
+            nohup java -jar ~/app/$JAR_FILE --server.port=8080 > ~/app/app.log 2>&1 &
+
+            # 실행 확인
+            sleep 10
+            echo "새로 실행된 Java 프로세스:"
+            pgrep -f 'java'
           EOF
