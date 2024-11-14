@@ -94,6 +94,12 @@
 | <img width="170" alt="admin_management" src="https://github.com/example/admin_management.png"> | <img width="170" alt="excel_upload" src="https://github.com/example/excel_upload.png"> |
 
 ## 🔧 BE 핵심 개발 영역
+### 엑셀 파일 관리 기능
+엑셀 파일 관리 기능을 도입한 이유는 요양원에서 다수의 요양보호사, 보호자, 돌봄대상자 정보를 한꺼번에 등록하려 할 때 더 효율적으로 관리할 수 있도록 하기 위함입니다. 이를 통해 개별적인 수작업 입력 대신 엑셀 파일을 이용해 일괄적으로 데이터를 업로드할 수 있어 시간을 크게 절감할 수 있습니다.
+-   템플릿 파일 제공: 요양보호사, 보호자, 돌봄대상자별로 필요한 정보가 포함된 엑셀 템플릿(.xlsx)을 제공합니다. 사용자는 이 템플릿을 다운로드해 여러 개의 데이터를 입력한 후 업로드합니다.
+-   유효성 검사 및 중복 검사: 서버에서 업로드된 파일을 읽어 각 행의 데이터를 유효성 및 중복 검사합니다. 휴대폰 번호나 장기요양인정번호가 중복되거나 입력 데이터의 형식이 맞지 않으면 해당 데이터는 저장되지 않습니다.
+-   데이터 저장: 검사를 통과한 데이터만 successList로 데이터베이스에 저장됩니다. 오류가 있는 데이터는 failedList로 반환되고, 이를 통해 오류가 있는 데이터는 데이터베이스에 저장되지 않고, 오류가 없는 정상적인 데이터만 안전하게 저장됩니다.
+
 
 ## 🧩 ERD
 <p align='center'>
@@ -105,11 +111,11 @@
 <div align="center">
 
 ![java 17](https://img.shields.io/badge/-Java%2017-ED8B00?style=flat-square&logo=java&logoColor=white)
-![spring boot 3.1.3](https://img.shields.io/badge/Spring%20boot%203.1.3-6DB33F?style=flat-square&logo=springboot&logoColor=white)
+![spring boot 3.3](https://img.shields.io/badge/Spring%20boot%203.3-6DB33F?style=flat-square&logo=springboot&logoColor=white)
 ![spring security](https://img.shields.io/badge/spring%20security-6DB33F?style=flat-square&logo=spring&logoColor=white)
 ![mysql 8.0](https://img.shields.io/badge/MySQL%208.0-005C84?style=flat-square&logo=mysql&logoColor=white)
 
-![Redis 6.2](https://img.shields.io/badge/Redis%206.2-DC382D?style=flat-square&logo=Redis&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=Redis&logoColor=white)
 ![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?style=flat-square&logo=amazons3&logoColor=white)
 ![AWS EC2](https://img.shields.io/badge/AWS%20EC2-FF9900?style=flat-square&logo=amazonec2&logoColor=white)
 ![Amazon sqs](https://img.shields.io/badge/Amazon%20sqs-FF9900?style=flat-square&logo=amazon&logoColor=white)
