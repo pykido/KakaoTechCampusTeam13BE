@@ -97,7 +97,7 @@
 
 ## 🧩 ERD
 <p align='center'>
-    <img width="400" alt="caregiver_difficulty" src="docs/source/erd.png">
+    <img width="700" alt="caregiver_difficulty" src="docs/source/erd.png">
 </p>
 
 ## ⚙️ 개발 스택
