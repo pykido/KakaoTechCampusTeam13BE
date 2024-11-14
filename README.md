@@ -1,23 +1,125 @@
-## 📝 이슈 설명
+# 🤝 Care Bridge - 요양 일지  서비스
 
-다음과 같이 꾸며보려고 합니다 ㅎㅎ
-- 서비스 로직의 이유가 정말 중요하다. ex) 왜 sqs를 사용했는지, 어떻게 확장될지.. 등등 사이드 이펙트도 정리해서 말해주기
-- 깃헙 위키
+<p align='center'>
+<img width="600" alt="care_bridge_logo" src="docs/source/care_bridge.png">
+</p>
+
+
+# 🔗 관련 주소
+
+|                         문서                         |
+|:--------------------------------------------------:|
+|  [백엔드 배포 주소](https://dbdr-servcie.com)  |
+| [프론트엔드 배포 주소](https://example-deployment-link.com) |
+|     [API 문서](https://dbdr-servcie.com/swagger-ui/index.html)     |
+|   [디자인 피그마](https://www.figma.com/design/RvPegHAoDLITbqAxexEok7/%EB%B6%80%EC%82%B0%EB%8C%80-13%EC%A1%B0-%EB%81%9D%EB%82%B4%EC%A3%BC%EC%A1%B0?node-id=19-3&node-type=canvas&t=IzVl1agbkGalr8SU-0)    |
+|      [프로젝트 노션](https://www.notion.so/example)      |
+
+# 🧐 왜 이 서비스가 필요할까?
+
+## 📝 문제 상황 1: 정보 공유의 단절
+- **보호자**는 가족의 상태를 자주 확인하고 싶지만, 요양원에 일일이 연락해야 하는 번거로움과 제한된 정보로 인해 불편을 겪고 있습니다.
+- 실시간 상태 확인이 어렵기 때문에, 보호자는 가족의 건강 상태에 대해 지속적인 불안감을 느낄 수 있습니다.
+
+
+```
+보호자의 요구 - 가족의 상태를 실시간으로 확인할 수 있는 간편한 정보 접근 방안이 필요하다.
+
+➡️ 보호자가 어디서든 가족의 상태를 쉽게 확인할 수 있는 시스템이 필요하다!
+```
+
+### 🎯 해결 방안
+- **실시간 정보 공유** 기능을 통해 보호자가 언제 어디서나 가족의 최신 상태를 확인할 수 있도록 합니다.
+- 보호자와 요양보호사 간의 소통을 원활하게 하여 불안감을 줄이고, 신뢰를 강화합니다.
 
 ---
 
-# Team13_BE
+## 📝 문제 상황 2: 요양보호사의 차트 작성 어려움
+- **요양보호사**는 복잡한 디지털 기록 시스템에 익숙하지 않아 핸드폰으로 차트를 작성하는 과정이 번거롭고 어렵습니다.
+- 이러한 어려움은 기록의 정확성과 신속성을 저해하고, 요양보호사의 업무 효율성에도 부정적인 영향을 미칩니다.
+
+<p align='center'>
+    <img width="400" alt="caregiver_difficulty" src="docs/source/caregiver_difficulty.png">
+</p>
+
+```
+요양보호사의 요구 - 복잡하지 않고 간단한 차트 작성 방식이 필요하다.
+
+➡️ 요양보호사가 쉽게 차트를 작성할 수 있도록 하는 간편한 기록 시스템이 필요하다!
+```
+
+### 🎯 해결 방안
+- **음성 인식 및 손글씨 인식** 기능을 통해 요양보호사가 복잡한 절차 없이 차트를 쉽게 작성할 수 있도록 지원합니다.
+- 기록 작성의 간소화를 통해 요양보호사의 부담을 줄이고, 환자의 상태를 신속하고 정확하게 기록할 수 있도록 합니다.
+
+---
+
+# 🌟 Care Bridge란?
+
+> **요양보호사**는 간편하게 차트를 작성하고,  
+> **보호자**는 이를 실시간으로 확인할 수 있는 **디지털 차트 서비스**
+
+- 보호자는 **언제 어디서나 가족의 상태를 확인**
+- 요양보호사는 **복잡함 없이 기록을 관리**
+
+**➡️ 신뢰와 편리성을 제공하는 소통 플랫폼**
+
+
+
+## 🧩 주요 기능
+
+### 보호자
+|                             🩺 **돌봄대상자 차트 확인**                             | 📝 **차트 요약** |
+|:--------------------------------------------------------------------------:|:--:|
+|               - **하루 상태 기록 확인**<br/> - 사진과 차트 작성 시 **알림 수신**               | - 긴 차트를 **핵심 내용 요약**<br/> - 주요 사항을 **간결하게 확인** |
+| <img width="170" alt="voice_recognition" src="docs/source/chart_view.png"> | <img width="170" alt="chart_summary_feature" src="docs/source/chart_summary.png"> |
+
+### 요양보호사
+|                              🖋️ **요양 일지 작성**                               | 🎙️ **음성 인식 차트 작성** |
+|:---------------------------------------------------------------------------:|:-:|
+|             - **음성/사진 인식**, 직접 작성 지원<br/> - **다양한 방식으로 간편 작성**              | - **음성 인식**을 통해 주관식 입력<br/> - 음성을 텍스트로 **자동 변환** |
+| <img width="170" alt="voice_recognition" src="docs/source/chart_write.png"> |<img width="170" alt="voice_recognition" src="docs/source/voice_recognition.png"> |
+
+
+|                                 📷 **OCR 차트 작성**                                 |                                  📑 **차트 요약 기능**                                  |                              🔔 **알림 기능**                               |
+|:--------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|:-----------------------------------------------------------------------:|
+|               - **차트 양식 프린트 후 사진 인식**<br/> - 사진 한 장으로 **자동 기록 완성**               |                  - **환자 상태 요약 제공**<br/> - 여러 환자의 **하루 상태 간편 확인**                  |               - 사용자가 예약한 시간마다<br/> - 문자/라인 메시지로 차트 작성 알림                |
+| <img width="170" alt="ocr_chart" src="https://github.com/example/ocr_chart.png"> | <img width="170" alt="chart_summary_feature" src="docs/source/chart_summary.png"> | <img width="170" alt="care_message" src="docs/source/care_message.jpg"> |
+
+
+### 요양원
+|                                   🖥️ **요양사, 보호자, 돌봄대상자 관리**                                   |                                     📊 **엑셀 업로드**                                      |
+|:----------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------:|
+|                      - **웹사이트로 정보 관리**<br/> - 요양사, 보호자, 대상자 정보 **수정 가능**                       |                  - 엑셀 파일로 **대량 데이터 업로드**<br/> - 제공된 템플릿 파일로 **간편 등록**                  |
+| <img width="170" alt="admin_management" src="https://github.com/example/admin_management.png"> | <img width="170" alt="excel_upload" src="https://github.com/example/excel_upload.png"> |
+
+## 🔧 BE 핵심 개발 영역
+
+## 🧩 ERD
+
+## ⚙️ 개발 스택
+
 <div align="center">
 
-<img src="https://github.com/user-attachments/assets/89319294-ed1d-497d-834d-b2c6719367ae" width="30%">
+![java 17](https://img.shields.io/badge/-Java%2017-ED8B00?style=flat-square&logo=java&logoColor=white)
+![spring boot 3.1.3](https://img.shields.io/badge/Spring%20boot%203.1.3-6DB33F?style=flat-square&logo=springboot&logoColor=white)
+![spring security](https://img.shields.io/badge/spring%20security-6DB33F?style=flat-square&logo=spring&logoColor=white)
+![mysql 8.0](https://img.shields.io/badge/MySQL%208.0-005C84?style=flat-square&logo=mysql&logoColor=white)
 
-최고의 요양원 관리 서비스, '돌봄다리'의 백엔드 서버입니다.
+![Redis 6.2](https://img.shields.io/badge/Redis%206.2-DC382D?style=flat-square&logo=Redis&logoColor=white)
+![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?style=flat-square&logo=amazons3&logoColor=white)
+![AWS EC2](https://img.shields.io/badge/AWS%20EC2-FF9900?style=flat-square&logo=amazonec2&logoColor=white)
+![Amazon sqs](https://img.shields.io/badge/Amazon%20sqs-FF9900?style=flat-square&logo=amazon&logoColor=white)
 
-해당 레포지토리는 [카카오테크캠퍼스](https://www.kakaotechcampus.com/) 2기 부산대 13조 프로젝트에 기반을 두고 있습니다.
+![Naver cloud](https://img.shields.io/badge/naver%20cloud-03C75A?style=flat-square&logo=naver&logoColor=white)
+![openAI](https://img.shields.io/badge/openAI-FF6C37?style=flat-square&logo=openai&logoColor=white)
+![poi](https://img.shields.io/badge/poi-3F6EB5?style=flat-square&logo=apache&logoColor=white)
+![line api](https://img.shields.io/badge/line%20api-00C300?style=flat-square&logo=line&logoColor=white)
+![coolSms](https://img.shields.io/badge/coolSms-FF6C37?style=flat-square&logo=coolSms&logoColor=white)
 
 </div>
 
-## Collaborators
+# 🧑‍💻 Collaborators
 
 <h3 align="center">Backend</h3>
 
@@ -41,72 +143,3 @@
 | <div align="center"><img src="https://avatars.githubusercontent.com/u/102630375?v=4" width="100"></div> | <div align="center"><img src="https://avatars.githubusercontent.com/u/101401447?v=4" width="100"></div> |
 
 </div>
-
-
-## Introduction
-'돌봄다리'는 요양원, 요양보호사, 보호자 간의 소통을 원활하게 하기 위한 디지털 차트 작성 서비스입니다. 음성 인식과 손글씨 인식 기능을 통합하여 50-70대의 요양보호사들이 간편하고 효율적으로 일지를 작성할 수 있도록 설계되었습니다. 또한, 보호자들은 가족의 상태를 투명하게 확인할 수 있어 신뢰성 있는 서비스입니다. 추가적으로 자체 알림 서비스와 AI 서비스를 도입하여 일지 요약, 보호자와 요양보호사들과의 연락 등을 자동화하였습니다.
-
-
-
-## System Structure
-### 전체 구상도
-
-
-
-### 백엔드 구상도
-
-
-
-## ERD
-
-
-## Tech Stack
-
-<div align="center">
-
-![java 17](https://img.shields.io/badge/-Java%2017-ED8B00?style=for-the-badge&logo=java&logoColor=white)
-![spring boot 3.1.3](https://img.shields.io/badge/Spring%20boot%203.1.3-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
-![spring security](https://img.shields.io/badge/spring%20security-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
-![mysql 8.0](https://img.shields.io/badge/MySQL%208.0-005C84?style=for-the-badge&logo=mysql&logoColor=white)
-
-![Redis 6.2](https://img.shields.io/badge/Redis%206.2-DC382D?style=for-the-badge&logo=Redis&logoColor=white)
-![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?style=for-the-badge&logo=amazons3&logoColor=white)
-![AWS EC2](https://img.shields.io/badge/AWS%20EC2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white)
-![Amazon sqs](https://img.shields.io/badge/Amazon%20sqs-FF9900?style=for-the-badge&logo=amazon&logoColor=white)
-
-![Naver cloud](https://img.shields.io/badge/naver%20cloud-03C75A?style=for-the-badge&logo=naver&logoColor=white)
-![openAI](https://img.shields.io/badge/openAI-FF6C37?style=for-the-badge&logo=openai&logoColor=white)
-![poi](https://img.shields.io/badge/poi-3F6EB5?style=for-the-badge&logo=apache&logoColor=white)
-![line api](https://img.shields.io/badge/line%20api-00C300?style=for-the-badge&logo=line&logoColor=white)
-![coolSms](https://img.shields.io/badge/coolSms-FF6C37?style=for-the-badge&logo=coolSms&logoColor=white)
-
-</div>
-
-## 구현 기능 목록
-### 알림 서비스
-1. Line 알림 서비스
-    - Line Messaging API
-    - Amazon sqs
-    - spring scheduler
-2. SMS 알림 서비스
-    - coolSms API
-    - Amazon sqs
-    - spring scheduler
-
-### 파일 입출력
-- poi 라이브러리
-
-### AI
-- open AI
-- 파인 튜닝
-
-### OCR
-- S3 / presigned url
-- naver clovar
-
-### 인증/인가
-- spring security
-- redis
-
-
-
