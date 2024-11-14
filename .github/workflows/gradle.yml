@@ -2,7 +2,7 @@ name: Java CI and Deploy to AWS EC2 with Docker
 
 on:
   push:
-    branches: [ "Week10" ]
+    branches: [ "readme" ]
 
 jobs:
   build:
@@ -18,15 +18,15 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t your-app:latest .
+          docker build -t care-app:latest .
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Decode and save .pem file
+      - name: Save SSH key
         env:
-          EC2_SSH_KEY_BASE64: ${{ secrets.EC2_SSH_KEY_BASE64 }}
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
           echo "$EC2_SSH_KEY" > ec2-key.pem
           chmod 600 ec2-key.pem
@@ -37,11 +37,13 @@ jobs:
           EC2_USER: ${{ secrets.EC2_USER }}
         run: |
           # Docker 이미지 저장 후 EC2에 전송
-          docker save your-app:latest | bzip2 | ssh -i ec2-key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'bunzip2 | docker load'
+          docker save care-app:latest | bzip2 | ssh -i ec2-key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'bunzip2 | docker load'
 
-          # application-secret.yml 파일을 /app/config에 마운트하여 Docker 컨테이너 실행
+          # 기존 컨테이너 중지 및 삭제 후 새 컨테이너 실행
           ssh -i ec2-key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-            docker stop your-app-container || true
-            docker rm your-app-container || true
-            docker run -d --name your-app-container -v /path/on/ec2/application-secret.yml:/app/config/application-secret.yml -p 8080:8080 your-app:latest
+            echo "기존 컨테이너 중지 및 삭제 중..."
+            docker stop care-app-container || echo "실행 중인 컨테이너 없음"
+            docker rm care-app-container || echo "제거할 컨테이너 없음"
+            echo "새로운 컨테이너를 실행합니다."
+            docker run -d --name care-app-container -v /path/on/ec2/application-secret.yml:/app/config/application-secret.yml -p 8080:8080 care-app:latest
           EOF
