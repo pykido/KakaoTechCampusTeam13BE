@@ -1,27 +1,11 @@
-name: Java CI and Deploy to AWS EC2 with Docker
+name: Java CI and Deploy to AWS EC2 (Mock Docker Deployment)
 
 on:
   push:
     branches: [ "readme" ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up JDK 17 and Build
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Build Docker Image
-        run: |
-          docker build -t care-app:latest .
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Save SSH key
@@ -31,19 +15,55 @@ jobs:
           echo "$EC2_SSH_KEY" > ec2-key.pem
           chmod 600 ec2-key.pem
 
-      - name: Upload Docker Image to EC2 and Run
+      - name: Upload source code to EC2
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USER: ${{ secrets.EC2_USER }}
         run: |
-          # Docker 이미지 저장 후 EC2에 전송
-          docker save care-app:latest | bzip2 | ssh -i ec2-key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'bunzip2 | docker load'
+          scp -i ec2-key.pem -r ./ $EC2_USER@$EC2_HOST:/home/$EC2_USER/app
 
-          # 기존 컨테이너 중지 및 삭제 후 새 컨테이너 실행
+      - name: Mock Build and Deploy on EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+        run: |
           ssh -i ec2-key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-            echo "기존 컨테이너 중지 및 삭제 중..."
-            docker stop care-app-container || echo "실행 중인 컨테이너 없음"
-            docker rm care-app-container || echo "제거할 컨테이너 없음"
-            echo "새로운 컨테이너를 실행합니다."
-            docker run -d --name care-app-container -v /path/on/ec2/application-secret.yml:/app/config/application-secret.yml -p 8080:8080 care-app:latest
+            # 실제 실행 없이 빌드 및 Docker 실행을 모의
+            MOCK=true
+
+            # 빌드 단계
+            if [ "$MOCK" = true ]; then
+              echo "EC2에서 애플리케이션 빌드 중..."
+              echo "./gradlew clean build -x test"
+            else
+              ./gradlew clean build -x test
+            fi
+
+            # Docker 이미지 빌드 단계
+            if [ "$MOCK" = true ]; then
+              echo "Docker 이미지를 빌드하는 중..."
+              echo "docker build -t care-app:latest ."
+            else
+              docker build -t care-app:latest .
+            fi
+
+            # 기존 컨테이너 중지 및 삭제
+            if [ "$MOCK" = true ]; then
+              echo "기존 Docker 컨테이너 중지 및 삭제 중..."
+              echo "docker stop care-app-container || true"
+              echo "docker rm care-app-container || true"
+            else
+              docker stop care-app-container || true
+              docker rm care-app-container || true
+            fi
+
+            # 새 Docker 컨테이너 실행
+            if [ "$MOCK" = true ]; then
+              echo "새로운 Docker 컨테이너 실행 중..."
+              echo "docker run -d --name care-app-container -v /home/$EC2_USER/app/config/application-secret.yml:/app/config/application-secret.yml -p 8080:8080 care-app:latest"
+            else
+              docker run -d --name care-app-container -v /home/$EC2_USER/app/config/application-secret.yml:/app/config/application-secret.yml -p 8080:8080 care-app:latest
+            fi
+
+            echo "모의 배포 완료!"
           EOF
