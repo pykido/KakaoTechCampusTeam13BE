@@ -96,6 +96,9 @@
 ## 🔧 BE 핵심 개발 영역
 
 ## 🧩 ERD
+<p align='center'>
+    <img width="400" alt="caregiver_difficulty" src="docs/source/erd.png">
+</p>
 
 ## ⚙️ 개발 스택
 
