@@ -1,6 +1,5 @@
 package dbdr.domain.core.messaging.util;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -61,12 +60,12 @@ public class MessagingScheduler {
 			String name = careworker.getName();
 
 			// (1) Line 채널 알림 보내기
-			if (alarm != null && careworker.isLineSubscription()) {
+			if (alarm != null && careworker.isLineSubscription() && careworker.isWorkingOn(currentDateTime.getDayOfWeek())) {
 				log.info("Line 알림 메세지를 받을 보호자 : {}", name);
 				alarmService.sendAlarmToSqs(alarm, MessageChannel.LINE, name, careworker.getPhone(), careworker.getLineUserId());
 			}
 			// (2) SMS 알림 보내기
-			if (alarm != null && careworker.isSmsSubscription()) {
+			if (alarm != null && careworker.isSmsSubscription() && careworker.isWorkingOn(currentDateTime.getDayOfWeek())) {
 				log.info("SMS 문자 알림 메세지를 받을 보호자 : {}", name);
 				alarmService.sendAlarmToSqs(alarm, MessageChannel.SMS, name, careworker.getPhone(), careworker.getLineUserId());
 			}
