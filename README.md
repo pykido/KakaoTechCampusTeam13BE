@@ -77,28 +77,101 @@
 |                             🩺 **돌봄대상자 차트 확인**                             | 📝 **차트 요약** |
 |:--------------------------------------------------------------------------:|:--:|
 |               - **하루 상태 기록 확인**<br/> - 사진과 차트 작성 시 **알림 수신**               | - 긴 차트를 **핵심 내용 요약**<br/> - 주요 사항을 **간결하게 확인** |
-| <img width="170" alt="voice_recognition" src="docs/source/chart_view.png"> | <img width="170" alt="chart_summary_feature" src="docs/source/chart_summary.png"> |
+| <img width="170" alt="voice_recognition" src="https://github.com/user-attachments/assets/8576c182-0d63-4ebc-bb78-075c56db752a"> | <img width="170" alt="chart_summary_feature" src="https://github.com/user-attachments/assets/945784e9-6d78-47df-9e4a-d150cbc8ca04"> |
 
 ### 요양보호사
 |                              🖋️ **요양 일지 작성**                               | 🎙️ **음성 인식 차트 작성** |
 |:---------------------------------------------------------------------------:|:-:|
 |             - **음성/사진 인식**, 직접 작성 지원<br/> - **다양한 방식으로 간편 작성**              | - **음성 인식**을 통해 주관식 입력<br/> - 음성을 텍스트로 **자동 변환** |
-| <img width="170" alt="voice_recognition" src="docs/source/chart_write.png"> |<img width="170" alt="voice_recognition" src="docs/source/voice_recognition.png"> |
+| <img width="170" alt="create_chart" src="https://github.com/user-attachments/assets/0db6537d-a60a-4729-b757-36c4a88bafd4"> |<img width="170" alt="voice_recognition" src="https://github.com/user-attachments/assets/5f575c2d-64f9-4cb1-ad11-b934db0ca7b5">|
 
 
 |                                 📷 **OCR 차트 작성**                                 |                                  📑 **차트 요약 기능**                                  |                              🔔 **알림 기능**                               |
 |:--------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|:-----------------------------------------------------------------------:|
 |               - **차트 양식 프린트 후 사진 인식**<br/> - 사진 한 장으로 **자동 기록 완성**               |                  - **환자 상태 요약 제공**<br/> - 여러 환자의 **하루 상태 간편 확인**                  |               - 사용자가 예약한 시간마다<br/> - 문자/라인 메시지로 차트 작성 알림                |
-| <img width="170" alt="ocr_chart" src="https://github.com/example/ocr_chart.png"> | <img width="170" alt="chart_summary_feature" src="docs/source/chart_summary.png"> | <img width="170" alt="care_message" src="docs/source/care_message.jpg"> |
+| <img width="170" alt="ocr_chart" src="https://github.com/example/ocr_chart.png"> | <img width="170" alt="chart_summary_feature"  src="https://github.com/user-attachments/assets/945784e9-6d78-47df-9e4a-d150cbc8ca04"> | <img width="170" alt="care_message" src="docs/source/care_message.jpg"> |
 
 
 ### 요양원
 |                                   🖥️ **요양사, 보호자, 돌봄대상자 관리**                                   |                                     📊 **엑셀 업로드**                                      |
 |:----------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------:|
 |                      - **웹사이트로 정보 관리**<br/> - 요양사, 보호자, 대상자 정보 **수정 가능**                       |                  - 엑셀 파일로 **대량 데이터 업로드**<br/> - 제공된 템플릿 파일로 **간편 등록**                  |
-| <img width="170" alt="admin_management" src="https://github.com/example/admin_management.png"> | <img width="170" alt="excel_upload" src="https://github.com/example/excel_upload.png"> |
+| <img width="170" alt="admin_management" src="https://github.com/user-attachments/assets/4e2962a1-4272-46a4-87f0-dfab90788b81"> | <img width="170" alt="excel_upload"  src="https://github.com/user-attachments/assets/51dd3078-b672-4cbf-ae78-bb0ddc7eb5a6">|
 
 <br/>
+
+## 🔧 공통 핵심 개발 영역
+
+### 회원가입 방법
+- 사용자의 연령층을 고려할 때, 직접 회원가입하고 정보를 등록하는 것이 어려울 것이라 생각하여 요양원이나 관리자가 돌봄대상자나 보호자의 아이디, 비밀번호를 생성해줍니다.
+- 돌봄대상자와 보호자는 비밀번호만 기억하면 서비스 이용이 가능하도록 아이디는 본인의 전화번호로 등록하도록 구현하였습니다.
+- 관리자는 요양원, 보호자, 돌봄대상자, 요양보호사를 등록할 수 있습니다.
+- 요양원은 보호자, 돌봄대상자, 요양보호사를 해당 요양원에 등록할 수 있습니다.
+- 관리자의 경우 랜딩 페이지에 적힌 이메일로 contact하여 신분과 목적을 인증한 뒤 본 서비스 담당자가 아이디 비밀번호를 부여해줍니다.
+
+## 🔧 FE 핵심 개발 영역
+
+### OCR 기능
+1. **고려 사항**
+  
+2. **구현 방법**
+
+3. **문제 해결**
+
+### 음성인식 기능
+1. **구현 방법**
+    - SpeechToText 훅을 구현하여 녹음시작, 녹음중지, 다시 녹음이 가능하게 합니다.
+    - 녹음 중에 제대로 인식이 되고 있는지 실시간으로 화면에 띄워주어 확인이 가능하게 합니다.
+    - 조금 부족한 부분은 음성인식 완료 후 작성 페이지에서 직접 수정이 가능하도록 합니다.
+2. **문제 해결**
+    - 녹음 중 텍스트가 화면에 제대로 띄워지지 않고 중지, 시작 버튼이 제대로 작동하지 않았었는데, 상태 변수를 여러개를 사용하다보니 그러한 문제가 발생하였던 것이었습니다. 최대한 적은 상태변수를 사용하여 이러한 문제를 해결하였습니다.
+
+### 차트작성 기능
+1. **고려 사항**
+    - 본 사이트의 유저들의 연령대를 고려하여 최대한 단순하고 직관적이게 구현해야합니다.
+    - 의료와 관련이 있는 서비스이므로 일지 작성에 필수적인 항목들을 빠짐없이 복잡하지 않으면서도 구성해야합니다.
+2. **구현 방식**
+    - 국가에서 규정하고 있는 일지에 들어가야하는 항목들을 대분류에 따라 step으로 나누어 최대한 잘게 나누어서 입력을 받았습니다.
+    - 다른 형태의 입력을 받더라도 디자인은 최대한 비슷하게 컴포넌트를 구현하여 피로감을 덜었습니다.
+  
+### 차트 수정 및 삭제
+1. **고려 사항**
+    - 차트를 미리 작성해두고 시간이 지난 뒤에 무분별하게 차트를 수정하면 보호자가 불만을 가질 수 있습니다. 따라서 차트 수정은 당일 작성한 차트만 가능하게 하였습니다.
+2. **구현 방식**
+    - 요양보호사의 권한으로 돌봄대상자 차트 작성 아이콘을 누르면 현재 날짜와 비교하여 존재하는 차트가 있으면 차트 수정을, 없으면 새로운 차트 작성을 하게끔 구현하였습니다.
+    - 차트 삭제의 경우 요약일지 페이지에 삭제 버튼을 두어 삭제가 가능하게끔 했습니다.
+  
+### 로그인 및 로그아웃
+1. **로그인**
+    - 요양보호사와 보호자는 전화번호와 비밀번호로, 요양원과 관리자는 아이디와 비밀번호로 로그인이 가능하게 화면을 구성하였습니다.
+    - 필요한 항목들을 넣고 로그인을 하면 accessToken과 refreshToken을 받아오고 추후 accessToken이 만료되면 저장된 refreshToken으로 새로운 accessToken과 refreshToken을 발급받습니다.
+2. **로그아웃**
+    - 로그아웃을 자주 이용하는 서비스가 아니므로 로그아웃 기능은 화면 우측 상단에 프로필 사진을 누르면 이동하는 마이페이지에서 로그아웃이 가능하도록 구현하였습니다.
+    - 로그아웃시 랜딩페이지로 이동하여 다시 로그인이 가능하게끔 합니다.
+
+### 사용자의 편리를 위해 세세하게 신경 쓴 화면
+1. 단순하고 깔끔한 UI
+    - 한 화면에 적당한 양의 항목들만을 배치하여 여백을 주어 차트를 조회하거나 작성할 때에 피로하지 않도록 합니다.
+    - 직관적인 버튼으로 사용이 어렵지 않게 구현합니다.
+2. **캘린더**로 존재하는 차트 내역 한눈에 확인 가능
+    - 차트를 매일 작성하지는 않는다는 특성상 현재 존재하는 차트의 작성일을 불러와 캘린더에 표시해줍니다.
+    - 표시된 날짜를 클릭하면 해당 날짜에 작성된 일지에 대한 AI 요약일지, 전체 일지 내역을 확인할 수 있습니다.
+    - 차트가 존재하지 않는 날짜는 선택할 수 없게 하여 사용하기 용이하게 하였습니다.
+3. 일지 작성 또는 열람시 **step**을 표시
+    - 단계바 클릭시 해당 step으로 넘어가게 하여 작성시에는 앞서 작성한 내용의 수정이, 열람시에는 원하는 step 확인이 용이하게 합니다.
+    - 일지 작성시에는 현재 작성 중인 step 이후의 step으로는 넘어가지 못하게 하여 작성 내용 누락을 방지하였습니다.
+    - 일지 열람시에는 자유롭게 step 이동이 가능합니다.
+4. 웹 혹은 태블릿 화면에서의 **화면 너비 고정**
+    - 단순한 화면을 위하여 단계를 잘게 나눈 만큼 한 화면에서 수행해야할 동작들이 적은 편이고 화면도 단순한 편인 것을 고려하여 화면이 더 넓어지더라도 최대 너비를 고정하여 UI가 깔끔하게 유지할 수 있게끔 구현하였습니다.
+    - 관리자나 요양 기관에서는 컴퓨터를 사용하여 표를 관리할 것을 고려하여 웹 화면 규격에 맞추어 구현하였습니다.
+    - 랜딩페이지의 경우 모든 화면에서도 자연스럽게 보이도록 반응형으로 구현하였습니다.
+
+### 자연스러운 랜딩페이지
+1. **고려 사항**
+    웹과 태블릿, 휴대폰 등 다양한 규격으로 사용하는 홈페이지이기에 자칫하면 어색한 배치의 화면이 띄워지는 화면이 띄워질 수 있습니다. 이를 방지하기 위하여 어느 크기의 화면에서도 자연스럽게 보이게 구현하였습니다. 
+2. **구현 방식**
+    - breakpoints.ts에 네가지 규격를 저장하여 해당 수치에 못 미치거나 초과할때 글씨 크기나 아이템들의 배치를 수정합니다.
+    - 배치에 맞게 애니메이션을 추가하여 뚝뚝 끊기지않고 부드러운 느낌이 들게 구현하였습니다.
 
 ## 🔧 BE 핵심 개발 영역
 
@@ -185,6 +258,20 @@ presigned URL을 통해 이미지 파일을 S3에 업로드하고, 백엔드 서
 ![poi](https://img.shields.io/badge/poi-3F6EB5?style=flat-square&logo=apache&logoColor=white)
 ![line api](https://img.shields.io/badge/line%20api-00C300?style=flat-square&logo=line&logoColor=white)
 ![coolSms](https://img.shields.io/badge/coolSms-FF6C37?style=flat-square&logo=coolSms&logoColor=white)
+
+![React](https://img.shields.io/badge/-React%2018-4894FE?style=flat-square&logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/-Vite%205-646CFF?style=flat-square&logo=vite&logoColor=white)
+![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+
+![Chakra UI](https://img.shields.io/badge/-Chakra%20UI-319795?style=flat-square&logo=chakraui&logoColor=white)
+![Emotion](https://img.shields.io/badge/-Emotion-FF69B4?style=flat-square&logo=emotion&logoColor=white)
+![Styled Components](https://img.shields.io/badge/-Styled%20Components-DB7093?style=flat-square&logo=styledcomponents&logoColor=white)
+
+![React Query](https://img.shields.io/badge/-React%20Query-FF4154?style=flat-square&logo=reactquery&logoColor=white)
+![Axios](https://img.shields.io/badge/-Axios-5A29E4?style=flat-square&logo=axios&logoColor=white)
+
+![Tesseract.js](https://img.shields.io/badge/-Tesseract.js-3D348B?style=flat-square&logo=tesseract&logoColor=white)
+
 
 </div>
 
