@@ -1,0 +1,69 @@
+name: Java CI and Deploy to AWS EC2 (Mock Docker Deployment)
+
+on:
+  push:
+    branches: [ "readme" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Save SSH key
+        env:
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          echo "$EC2_SSH_KEY" > ec2-key.pem
+          chmod 600 ec2-key.pem
+
+      - name: Upload source code to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+        run: |
+          scp -i ec2-key.pem -o StrictHostKeyChecking=no -r ./* $EC2_USER@$EC2_HOST:/home/$EC2_USER/app
+
+      - name: Mock Build and Deploy on EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+        run: |
+          ssh -i ec2-key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
+          
+            MOCK=true
+
+            # 빌드 단계
+            if [ "$MOCK" = true ]; then
+              echo "EC2에서 애플리케이션 빌드 중..."
+              echo "./gradlew clean build -x test"
+            else
+              ./gradlew clean build -x test
+            fi
+
+            # Docker 이미지 빌드 단계
+            if [ "$MOCK" = true ]; then
+              echo "Docker 이미지를 빌드하는 중..."
+              echo "docker build -t care-app:latest ."
+            else
+              docker build -t care-app:latest .
+            fi
+
+            # 기존 컨테이너 중지 및 삭제
+            if [ "$MOCK" = true ]; then
+              echo "기존 Docker 컨테이너 중지 및 삭제 중..."
+              echo "docker stop care-app-container || true"
+              echo "docker rm care-app-container || true"
+            else
+              docker stop care-app-container || true
+              docker rm care-app-container || true
+            fi
+
+            # 새 Docker 컨테이너 실행
+            if [ "$MOCK" = true ]; then
+              echo "새로운 Docker 컨테이너 실행 중..."
+              echo "docker run -d --name care-app-container -v /home/$EC2_USER/app/config/application-secret.yml:/app/config/application-secret.yml -p 8080:8080 care-app:latest"
+            else
+              docker run -d --name care-app-container -v /home/$EC2_USER/app/config/application-secret.yml:/app/config/application-secret.yml -p 8080:8080 care-app:latest
+            fi
+
+            echo "배포 완료"
+          EOF

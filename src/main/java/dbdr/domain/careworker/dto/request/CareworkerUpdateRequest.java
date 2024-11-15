@@ -1,26 +1,21 @@
 package dbdr.domain.careworker.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.Set;
+import java.time.DayOfWeek;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+public record CareworkerUpdateRequest(
+    @Schema(description = "요양보호사의 알림 시간", example = "17:00:00")
+    LocalTime alertTime,
 
-@Getter
-@AllArgsConstructor
-public class CareworkerUpdateRequest {
+    @Schema(description = "근무 요일")
+    Set<DayOfWeek> workingDays,
 
-    @NotNull(message = "근무일은 필수 항목입니다.")
-    @Schema(description = "근무 요일 목록", example = "[\"MONDAY\", \"WEDNESDAY\", \"FRIDAY\"]")
-    private Set<DayOfWeek> workingDays;
+    @Schema(description = "SMS 수신 동의 여부", example = "true")
+    boolean smsSubscription,
 
-    @JsonFormat(pattern = "HH:mm")
-    @NotNull(message = "알림 시간은 필수 항목입니다.")
-    @Schema(description = "알림 시간 (HH:mm 형식)", example = "17:00")
-    private LocalTime alertTime;
+    @Schema(description = "LINE 수신 동의 여부", example = "true")
+    boolean lineSubscription
+) {
 }

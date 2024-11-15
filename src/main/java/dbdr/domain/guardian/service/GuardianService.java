@@ -1,8 +1,6 @@
 package dbdr.domain.guardian.service;
 
-import dbdr.domain.core.alarm.service.AlarmService;
-import dbdr.domain.core.alarm.service.AlarmService;
-import dbdr.domain.guardian.dto.request.GuardianAlertTimeRequest;
+import dbdr.domain.guardian.dto.request.GuardianMyPageRequest;
 import dbdr.domain.guardian.dto.request.GuardianUpdateRequest;
 import dbdr.domain.guardian.dto.response.GuardianMyPageResponse;
 import dbdr.domain.guardian.entity.Guardian;
@@ -28,7 +26,6 @@ public class GuardianService {
 
     private final GuardianRepository guardianRepository;
     private final InstitutionRepository institutionRepository;
-    private final AlarmService alarmService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -42,20 +39,19 @@ public class GuardianService {
 
     public GuardianMyPageResponse getMyPageGuardianInfo(Long guardianId) {
         Guardian guardian = findGuardianById(guardianId);
-        return new GuardianMyPageResponse(guardian.getName(), guardian.getPhone(),
-            guardian.getAlertTime());
+        return new GuardianMyPageResponse(guardian.getName(), guardian.getPhone(), guardian.getAlertTime(), guardian.isSmsSubscription(), guardian.isLineSubscription());
     }
 
     @Transactional
-    public GuardianMyPageResponse updateAlertTime(Long guardianId,
-        GuardianAlertTimeRequest request) {
-        ensureUniquePhoneButNotId(request.phone(), guardianId);
+    public GuardianMyPageResponse updateMyPageInfo(Long guardianId, GuardianMyPageRequest request) {
         Guardian guardian = findGuardianById(guardianId);
-        guardian.updateAlertTime(request.name(), request.phone(), request.alertTime());
+        if (request.alertTime() != null) {
+            guardian.updateAlertTime(request.alertTime());
+        }
+        guardian.updateSubscriptions(request.smsSubscription(), request.lineSubscription());
         guardianRepository.save(guardian);
-        alarmService.updateAlarmByLocalTime(request.alertTime(), request.phone());
         return new GuardianMyPageResponse(guardian.getName(), guardian.getPhone(),
-            guardian.getAlertTime());
+            guardian.getAlertTime(), guardian.isSmsSubscription(), guardian.isLineSubscription());
     }
 
     @Transactional
@@ -109,7 +105,6 @@ public class GuardianService {
             .institution(institution)
             .build();
         guardian = guardianRepository.save(guardian);
-        alarmService.createGuardianAlarm(guardian);
         return new GuardianResponse(guardian.getId(), guardian.getPhone(), guardian.getName(),
             guardian.getInstitution().getId(), guardian.isActive());
     }
@@ -128,7 +123,6 @@ public class GuardianService {
             .institution(institution)
             .build();
         guardian = guardianRepository.save(guardian);
-        alarmService.createGuardianAlarm(guardian);
         return new GuardianResponse(guardian.getId(), guardian.getPhone(), guardian.getName(),
             guardian.getInstitution().getId(), guardian.isActive());
     }
@@ -157,14 +151,9 @@ public class GuardianService {
         }
     }
 
-    public Guardian findByLineUserId(String userId) {
-        return guardianRepository.findByLineUserId(userId)
-            .orElse(null);
-    }
-
     public Guardian findByPhone(String phone) {
         return guardianRepository.findByPhone(phone)
-            .orElse(null);
+            .orElseThrow(() -> new ApplicationException(ApplicationError.GUARDIAN_NOT_FOUND));
     }
 
     @Transactional
@@ -174,7 +163,7 @@ public class GuardianService {
         guardianRepository.save(guardian);
     }
 
-	public List<Guardian> findByAlertTime(LocalTime currentTime) {
+    public List<Guardian> findByAlertTime(LocalTime currentTime) {
         return guardianRepository.findByAlertTime(currentTime);
-	}
+    }
 }
